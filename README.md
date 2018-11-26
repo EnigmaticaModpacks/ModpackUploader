@@ -13,7 +13,10 @@ The server files are automatically generatedfrom the files you specify.
 ## Dependencies
 * 7-Zip - https://www.7-zip.org/download.html
 * cUrl - https://curl.haxx.se/download.html
-* Twitch Export Builder - https://github.com/Gaz492/twitch-export-builder/releases/download/1.1.0/twitch_export-win.exe
+* Twitch Export Builder - Place in the same folder as the ModpackUploadTool - https://github.com/Gaz492/twitch-export-builder/releases/download/1.1.0/twitch_export-win.exe
+
+## Known issues
+* Currently only works on Windows
 
 A huge thanks goes out to Gaz492 for his Twitch Export Builder project, which made this tool possible.
 https://github.com/Gaz492/twitch-export-builder/
