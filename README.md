@@ -21,4 +21,5 @@ The server files are automatically generatedfrom the files you specify.
 
 ### Credit
 A huge thanks goes out to Gaz492 for his Twitch Export Builder project, which made this tool possible.
+
 https://github.com/Gaz492/twitch-export-builder/
