@@ -12,7 +12,7 @@ The server files are automatically generatedfrom the files you specify.
 
 ## Dependencies
 * 7-Zip - https://www.7-zip.org/download.html
-* cUrl - https://curl.haxx.se/download.html
+* cURL - https://curl.haxx.se/download.html
  
 ## Known issues
 * Currently only works on Windows
