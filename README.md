@@ -3,7 +3,7 @@
 This tool can automate the process of uploading modpacks to Curseforge.
 It creates a modpack manifest, which is then posted along with metadata to Curseforge for upload.
 When the upload has completed, server files are attached. 
-The server files are automatically generatedfrom the files you specify.
+The server files are automatically generated from the files you specify.
 
 ## Usage
 * Unzip the file into your modded Minecraft Instance.
