@@ -8,14 +8,13 @@ The server files are automatically generated from the files you specify.
 ## Usage
 * Unzip the file into your modded Minecraft Instance.
 * Fill in the .build.json file with appropriate information - This specifies the manifest information. The mods folder is automatically included.
-* Fill in the modpack_upload_settings.cfg - Each variable is explained in the document. It is best viewed in Visual Studio Code.
+* Fill in the settings.ps1 file.
+* Double-click the ModpackUploader.bat or ModpackUploader.sh
+
 
 ## Dependencies
-* 7-Zip - https://www.7-zip.org/download.html
 * cURL - https://curl.haxx.se/download.html
- 
-## Known issues
-* Currently only works on Windows
+* 7-Zip - https://www.7-zip.org/download.html
 
 ### Credits
 A huge thanks goes out to Gaz492 for his Twitch Export Builder project, which made this tool possible.
