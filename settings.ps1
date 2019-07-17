@@ -2,30 +2,6 @@
 # For details/help see: https://github.com/NillerMedDild/ModpackUploader
 
 # =====================================================================//
-#  MODULES
-# =====================================================================//
-
-# Toggle twitch-export-builder (automatic building of the manifest zip) on/off
-# Default: $true
-$ENABLE_MANIFEST_BUILDER_MODULE=$true
-
-# Toggle the modpack uploader on/off
-# Setting this to $false will also disable the Server File and Changelog Generator Modules.
-# Default: $true
-$ENABLE_MODPACK_UPLOADER_MODULE=$true
-
-# Toggle server file feature on/off
-# Default: $true
-$ENABLE_SERVER_FILE_MODULE=$true
-
-# Toggle automatic changelog generator on/off
-# This module requires an older modpack manifest zip to be present, 
-# $LAST_MODPACK_VERSION must be set, and the manifest naming must be consistent.
-# Default: $false
-$ENABLE_CHANGELOG_GENERATOR_MODULE=$false
-
-
-# =====================================================================//
 #  CURSEFORGE SETTINGS
 # =====================================================================//
 
@@ -94,3 +70,25 @@ $SERVER_CHANGELOG = $CLIENT_CHANGELOG
 # Default: $CLIENT_RELEASE_TYPE
 $SERVER_RELEASE_TYPE = $CLIENT_RELEASE_TYPE
 
+# =====================================================================//
+#  MODULES
+# =====================================================================//
+
+# Toggle twitch-export-builder (automatic building of the manifest zip) on/off
+# Default: $true
+$ENABLE_MANIFEST_BUILDER_MODULE=$true
+
+# Toggle the modpack uploader on/off
+# Setting this to $false will also disable the Server File and Changelog Generator Modules.
+# Default: $true
+$ENABLE_MODPACK_UPLOADER_MODULE=$true
+
+# Toggle server file feature on/off
+# Default: $true
+$ENABLE_SERVER_FILE_MODULE=$false
+
+# Toggle automatic changelog generator on/off
+# This module requires an older modpack manifest zip to be present, 
+# $LAST_MODPACK_VERSION must be set, and the manifest naming must be consistent.
+# Default: $false
+$ENABLE_CHANGELOG_GENERATOR_MODULE=$true
