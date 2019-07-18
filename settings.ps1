@@ -27,7 +27,7 @@ $FORGE_VERSION=14.23.5.2836
 
 $CLIENT_FILENAME = "My Modpack"
 
-# Default: "$CLIENT_FILENAME-$MODPACK_VERSION"
+# Default: "$CLIENT_FILENAME $MODPACK_VERSION"
 $CLIENT_FILE_DISPLAY_NAME = "$CLIENT_FILENAME $MODPACK_VERSION"
 
 # An array of compatible game versions of Minecraft.
@@ -49,7 +49,7 @@ $CLIENT_RELEASE_TYPE = "alpha"
 #=====================================================================//
 
 # Default: "$CLIENT_FILENAME Server $MODPACK_VERSION"
-$SERVER_FILENAME= "$CLIENT_FILENAME Server $MODPACK_VERSION"
+$SERVER_FILENAME = "$CLIENT_FILENAME Server $MODPACK_VERSION"
 
 # Default: $SERVER_FILENAME
 $SERVER_FILE_DISPLAY_NAME = $SERVER_FILENAME
@@ -85,10 +85,23 @@ $ENABLE_MODPACK_UPLOADER_MODULE=$true
 
 # Toggle server file feature on/off
 # Default: $true
-$ENABLE_SERVER_FILE_MODULE=$false
+$ENABLE_SERVER_FILE_MODULE=$true
 
 # Toggle automatic changelog generator on/off
 # This module requires an older modpack manifest zip to be present, 
 # $LAST_MODPACK_VERSION must be set, and the manifest naming must be consistent.
 # Default: $false
-$ENABLE_CHANGELOG_GENERATOR_MODULE=$true
+$ENABLE_CHANGELOG_GENERATOR_MODULE=$false
+
+# Toggle removal and re-download of jars on/off.
+# Setting this to true will ensure that you always have the latest 
+# Twitch Export Builder and ChangelogGenerator, but increases the
+# amount of time the script takes to finish.
+# Default: $false
+$ENABLE_ALWAYS_UPDATE_JARS = $false
+
+# Toggles extra logging on/off.
+# Recommended if you're having trouble making the Modpack Uploader
+# work.
+# Default: $false
+$ENABLE_EXTRA_LOGGING = $false
