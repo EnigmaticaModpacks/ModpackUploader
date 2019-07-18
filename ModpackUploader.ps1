@@ -33,12 +33,13 @@ function Clear-SleepHost {
 }
 
 if ($ENABLE_MANIFEST_BUILDER_MODULE) {
-    $TwitchExportBuilder = "twitch-export-builder_windows_amd64.exe"
+    $TwitchExportBuilder = "TwitchExportBuilder.exe"
     if (!(Test-Path $TwitchExportBuilder) -or $ENABLE_ALWAYS_UPDATE_JARS) {
         Remove-Item $TwitchExportBuilder -Recurse -Force -ErrorAction SilentlyContinue
-        Download-GithubRelease -repo "Gaz492/twitch-export-builder" -file $TwitchExportBuilder
+        Download-GithubRelease -repo "Gaz492/twitch-export-builder" -file "twitch-export-builder_windows_amd64.exe"
     }
-    .\twitch-export-builder_windows_amd64.exe -n "$CLIENT_FILENAME" -p "$MODPACK_VERSION"
+    Rename-Item -Path "twitch-export-builder_windows_amd64.exe" -NewName $TwitchExportBuilder
+    .\TwitchExportBuilder.exe -n "$CLIENT_FILENAME" -p "$MODPACK_VERSION"
     Rename-Item -Path "$CLIENT_FILENAME-$MODPACK_VERSION.zip" -NewName "$CLIENT_FILENAME $MODPACK_VERSION.zip"
     Clear-SleepHost
 }
