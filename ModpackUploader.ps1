@@ -41,6 +41,7 @@ if ($ENABLE_MANIFEST_BUILDER_MODULE) {
     Rename-Item -Path "twitch-export-builder_windows_amd64.exe" -NewName $TwitchExportBuilder
     .\TwitchExportBuilder.exe -n "$CLIENT_FILENAME" -p "$MODPACK_VERSION"
     Rename-Item -Path "$CLIENT_FILENAME-$MODPACK_VERSION.zip" -NewName "$CLIENT_FILENAME $MODPACK_VERSION.zip"
+	Remove-Item -Path "$CLIENT_FILENAME-$MODPACK_VERSION.zip" -ErrorAction SilentlyContinue
     Clear-SleepHost
 }
 
