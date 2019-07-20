@@ -40,8 +40,6 @@ if ($ENABLE_MANIFEST_BUILDER_MODULE) {
     }
     Rename-Item -Path "twitch-export-builder_windows_amd64.exe" -NewName $TwitchExportBuilder
     .\TwitchExportBuilder.exe -n "$CLIENT_FILENAME" -p "$MODPACK_VERSION"
-    Rename-Item -Path "$CLIENT_FILENAME-$MODPACK_VERSION.zip" -NewName "$CLIENT_FILENAME $MODPACK_VERSION.zip"
-	Remove-Item -Path "$CLIENT_FILENAME-$MODPACK_VERSION.zip" -ErrorAction SilentlyContinue
     Clear-SleepHost
 }
 
@@ -57,7 +55,7 @@ if ($ENABLE_CHANGELOG_GENERATOR_MODULE -and $ENABLE_MODPACK_UPLOADER_MODULE) {
 
     sz e "$CLIENT_FILENAME $LAST_MODPACK_VERSION.zip" manifest.json
     Rename-Item -Path manifest.json -NewName oldmanifest.json
-    sz e "$CLIENT_FILENAME $MODPACK_VERSION.zip" manifest.json
+    sz e "$CLIENT_FILENAME-$MODPACK_VERSION.zip" manifest.json
 
     Clear-SleepHost
     Write-Host "######################################" -ForegroundColor Cyan
@@ -70,7 +68,7 @@ if ($ENABLE_CHANGELOG_GENERATOR_MODULE -and $ENABLE_MODPACK_UPLOADER_MODULE) {
 }
 
 if ($ENABLE_MODPACK_UPLOADER_MODULE) {
-    $CLIENT_FILENAME = "$CLIENT_FILENAME $MODPACK_VERSION.zip"
+    $CLIENT_FILENAME = "$CLIENT_FILENAME-$MODPACK_VERSION.zip"
 
     $CLIENT_METADATA = 
     "{
