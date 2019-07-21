@@ -25,6 +25,7 @@ Almost everything can be toggled on/off in the settings.
     Find it here: https://docs.microsoft.com/en-us/powershell/scripting/install/installing-powershell-core-on-linux?view=powershell-6
 
 * The setting ENABLE_ALWAYS_UPDATE_JARS only works on Windows.
+
 ### Credits
 A huge thanks goes out to Gaz492 for his Twitch Export Builder project, which made this tool possible.
 

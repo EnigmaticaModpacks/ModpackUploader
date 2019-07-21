@@ -8,7 +8,7 @@
 $CURSEFORGE_USER = "MyUserName"
 
 # For details see: https://authors.curseforge.com/account/api-tokens
-$CURSEFORGE_TOKEN = 324253326233
+$CURSEFORGE_TOKEN = 1111111
 
 # ProjectID can be found on the modpack's Curseforge Projects page, under "About This Project"
 $CURSEFORGE_PROJECT_ID = 999999
@@ -20,12 +20,9 @@ $CURSEFORGE_PROJECT_ID = 999999
 # Default: "1.0.0"
 $MODPACK_VERSION = "1.0.0"
 
-# Only used by the Changelog Generator
-$LAST_MODPACK_VERSION = "0.9.0"
-
 $FORGE_VERSION=14.23.5.2836
 
-$CLIENT_FILENAME = "My Modpack"
+$CLIENT_FILENAME = "MyModpack"
 
 # Default: "$CLIENT_FILENAME $MODPACK_VERSION"
 $CLIENT_FILE_DISPLAY_NAME = "$CLIENT_FILENAME $MODPACK_VERSION"
@@ -76,22 +73,23 @@ $SERVER_RELEASE_TYPE = $CLIENT_RELEASE_TYPE
 
 # Toggle twitch-export-builder (automatic building of the manifest zip) on/off
 # Default: $true
-$ENABLE_MANIFEST_BUILDER_MODULE=$true
+$ENABLE_MANIFEST_BUILDER_MODULE = $true
 
 # Toggle the modpack uploader on/off
 # Setting this to $false will also disable the Server File and Changelog Generator Modules.
 # Default: $true
-$ENABLE_MODPACK_UPLOADER_MODULE=$true
+$ENABLE_MODPACK_UPLOADER_MODULE = $true
 
 # Toggle server file feature on/off
 # Default: $true
-$ENABLE_SERVER_FILE_MODULE=$true
+$ENABLE_SERVER_FILE_MODULE = $true
 
 # Toggle automatic changelog generator on/off
 # This module requires an older modpack manifest zip to be present, 
 # $LAST_MODPACK_VERSION must be set, and the manifest naming must be consistent.
 # Default: $false
 $ENABLE_CHANGELOG_GENERATOR_MODULE=$false
+$LAST_MODPACK_VERSION = "0.9.0"
 
 # Toggle removal and re-download of jars on/off.
 # Setting this to true will ensure that you always have the latest 
@@ -105,3 +103,14 @@ $ENABLE_ALWAYS_UPDATE_JARS = $false
 # work.
 # Default: $false
 $ENABLE_EXTRA_LOGGING = $false
+
+# Toggles github changelog generator integration on/off.
+# Requires extensive setup, this is an advanced step.
+# See below link for info:
+# https://github.com/github-changelog-generator/github-changelog-generator
+# Default: $false
+$ENABLE_GITHUB_CHANGELOG_GENERATOR_MODULE = $false
+$GITHUB_TOKEN = "MyToken"
+$GITHUB_NAME = "MyName"
+$GITHUB_REPOSITORY = "MyRepo"
+$CHANGES_SINCE_VERSION = "1.0.0"
