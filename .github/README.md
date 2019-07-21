@@ -11,7 +11,7 @@ Almost everything can be toggled on/off in the settings.
 * Unzip the file into your modded Minecraft Instance.
 * Fill in the .build.json file with appropriate information - This specifies the manifest information. The mods folder is automatically included.
 * Fill in the settings.ps1 file.
-* Double-click the ModpackUploader.bat or ModpackUploader.sh
+* Double-click the ModpackUploader.bat or start ModpackUploader.ps1 using the command line.
 
 ## Dependencies
 * cURL - https://curl.haxx.se/download.html
@@ -27,6 +27,10 @@ Almost everything can be toggled on/off in the settings.
 * The setting ENABLE_ALWAYS_UPDATE_JARS only works on Windows.
 
 ### Credits
-A huge thanks goes out to Gaz492 for his Twitch Export Builder project, which made this tool possible.
+A huge thanks goes out to:
 
-https://github.com/Gaz492/twitch-export-builder/
+    Gaz492 for his Twitch Export Builder project, which made this tool possible.
+    https://github.com/Gaz492/twitch-export-builder/
+
+    TheRandomLabs for his Changelog Generator project, which greatly improves this tool.
+    https://github.com/TheRandomLabs/ChangelogGenerator
