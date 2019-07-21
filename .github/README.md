@@ -27,10 +27,10 @@ Almost everything can be toggled on/off in the settings.
 * The setting ENABLE_ALWAYS_UPDATE_JARS only works on Windows.
 
 ### Credits
-A huge thanks goes out to:
+A big thanks goes out to:
 
-    Gaz492 for his Twitch Export Builder project, which made this tool possible.
-    https://github.com/Gaz492/twitch-export-builder/
+Gaz492 for his Twitch Export Builder project, which made this tool possible.
+https://github.com/Gaz492/twitch-export-builder/
 
-    TheRandomLabs for his Changelog Generator project, which greatly improves this tool.
-    https://github.com/TheRandomLabs/ChangelogGenerator
+TheRandomLabs for his Changelog Generator project, which greatly improves this tool.
+https://github.com/TheRandomLabs/ChangelogGenerator
