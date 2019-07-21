@@ -5,6 +5,8 @@ It creates a modpack manifest, which is then posted along with metadata to Curse
 When the upload has completed, server files are attached. 
 The server files are automatically generated from files/folders you specify.
 
+It's possible to integrate [Github Changelog Generator](https://github.com/github-changelog-generator/github-changelog-generator) and [Changelog Generator for mods](https://github.com/TheRandomLabs/ChangelogGenerator) by toggling them in the settings, and configuring them.
+
 Almost everything can be toggled on/off in the settings.
 
 ## Usage
