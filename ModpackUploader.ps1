@@ -37,8 +37,8 @@ if ($ENABLE_MANIFEST_BUILDER_MODULE) {
     if (!(Test-Path $TwitchExportBuilder) -or $ENABLE_ALWAYS_UPDATE_JARS) {
         Remove-Item $TwitchExportBuilder -Recurse -Force -ErrorAction SilentlyContinue
         Download-GithubRelease -repo "Gaz492/twitch-export-builder" -file "twitch-export-builder_windows_amd64.exe"
+		Rename-Item -Path "twitch-export-builder_windows_amd64.exe" -NewName $TwitchExportBuilder -ErrorAction SilentlyContinue
     }
-    Rename-Item -Path "twitch-export-builder_windows_amd64.exe" -NewName $TwitchExportBuilder
     .\TwitchExportBuilder.exe -n "$CLIENT_FILENAME" -p "$MODPACK_VERSION"
     Clear-SleepHost
 }
@@ -53,9 +53,9 @@ if ($ENABLE_CHANGELOG_GENERATOR_MODULE -and $ENABLE_MODPACK_UPLOADER_MODULE) {
     if (-not (test-path "$env:ProgramFiles\7-Zip\7z.exe")) {throw "$env:ProgramFiles\7-Zip\7z.exe needed to generate changelogs"} 
     Set-Alias sz "$env:ProgramFiles\7-Zip\7z.exe"
 
-    sz e "$CLIENT_FILENAME $LAST_MODPACK_VERSION.zip" manifest.json
+    sz e "$CLIENT_FILENAME`-$LAST_MODPACK_VERSION.zip" manifest.json
     Rename-Item -Path manifest.json -NewName oldmanifest.json
-    sz e "$CLIENT_FILENAME-$MODPACK_VERSION.zip" manifest.json
+    sz e "$CLIENT_FILENAME`-$MODPACK_VERSION.zip" manifest.json
 
     Clear-SleepHost
     Write-Host "######################################" -ForegroundColor Cyan
@@ -65,6 +65,42 @@ if ($ENABLE_CHANGELOG_GENERATOR_MODULE -and $ENABLE_MODPACK_UPLOADER_MODULE) {
 
     java -jar ChangelogGenerator.jar oldmanifest.json manifest.json
     Rename-Item -Path changelog.txt -NewName MOD_CHANGELOGS.txt
+}
+
+if ($ENABLE_GITHUB_CHANGELOG_GENERATOR_MODULE) {
+
+    $BASE64TOKEN = [System.Convert]::ToBase64String([char[]]$GITHUB_TOKEN);
+    $Uri = "https://api.github.com/repos/$GITHUB_NAME/$GITHUB_REPOSITORY/releases?access_token=$GITHUB_TOKEN"
+
+    $Headers = @{
+        Authorization = 'Basic {0}' -f $Base64Token;
+    };
+
+    $Body = @{
+        tag_name = $MODPACK_VERSION;
+        target_commitish = 'master';
+        name = $MODPACK_VERSION;
+        body = $CLIENT_CHANGELOG;
+        draft = $false;
+        prerelease = $false;
+    } | ConvertTo-Json;
+
+    Clear-SleepHost
+    if ($ENABLE_EXTRA_LOGGING) {
+        Write-Host "Release Data:"
+        Write-Host $Body 
+    }
+
+    Write-Host ""
+    Write-Host "######################################" -ForegroundColor Cyan
+    Write-Host ""
+    Write-Host "Making GitHub Release..." -ForegroundColor Green
+    Write-Host ""
+
+    [Net.ServicePointManager]::SecurityProtocol = [Net.SecurityProtocolType]::Tls12
+    Invoke-RestMethod -Headers $Headers -Uri $Uri -Body $Body -Method Post
+
+	Start-Process Powershell.exe -Argument "-NoProfile -Command github_changelog_generator --since-tag $CHANGELOG_FROM_VERSION"
 }
 
 if ($ENABLE_MODPACK_UPLOADER_MODULE) {

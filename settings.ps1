@@ -110,7 +110,7 @@ $ENABLE_EXTRA_LOGGING = $false
 # https://github.com/github-changelog-generator/github-changelog-generator
 # Default: $false
 $ENABLE_GITHUB_CHANGELOG_GENERATOR_MODULE = $false
-$GITHUB_TOKEN = "MyToken"
 $GITHUB_NAME = "MyName"
+$GITHUB_TOKEN = "$GITHUB_NAME`:MyToken"
 $GITHUB_REPOSITORY = "MyRepo"
 $CHANGES_SINCE_VERSION = "1.0.0"
