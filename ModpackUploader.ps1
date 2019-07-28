@@ -152,7 +152,7 @@ if ($ENABLE_SERVER_FILE_MODULE -and $ENABLE_MODPACK_UPLOADER_MODULE) {
     Write-Host ""
 
     $SERVER_FILENAME = "$SERVER_FILENAME.zip"
-    Compress-Archive -Path $CONTENTS_TO_ZIP -DestinationPath "$PSScriptRoot\$SERVER_FILENAME"
+    sz a -tzip $SERVER_FILENAME $CONTENTS_TO_ZIP
 
     $SERVER_METADATA = 
     "{
