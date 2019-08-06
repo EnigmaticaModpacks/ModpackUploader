@@ -9,7 +9,7 @@ function Download-GithubRelease {
         [string]
         $file
     )
-
+	
     $releases = "https://api.github.com/repos/$repo/releases"
 
     Write-Host "Determining latest release of $repo"
@@ -32,6 +32,9 @@ function Clear-SleepHost {
     Clear-Host
 }
 
+if (-not (test-path "$env:ProgramFiles\7-Zip\7z.exe")) {throw "$env:ProgramFiles\7-Zip\7z.exe needed to use the ModpackUploader."} 
+    Set-Alias sz "$env:ProgramFiles\7-Zip\7z.exe"
+
 if ($ENABLE_MANIFEST_BUILDER_MODULE) {
     $TwitchExportBuilder = "TwitchExportBuilder.exe"
     if (!(Test-Path $TwitchExportBuilder) -or $ENABLE_ALWAYS_UPDATE_JARS) {
@@ -50,9 +53,6 @@ if ($ENABLE_CHANGELOG_GENERATOR_MODULE -and $ENABLE_MODPACK_UPLOADER_MODULE) {
         Download-GithubRelease -repo "TheRandomLabs/ChangelogGenerator" -file $ChangelogGenerator
     }
     Remove-Item oldmanifest.json, manifest.json, shortchangelog.txt, MOD_CHANGELOGS.txt -ErrorAction SilentlyContinue
-    if (-not (test-path "$env:ProgramFiles\7-Zip\7z.exe")) {throw "$env:ProgramFiles\7-Zip\7z.exe needed to generate changelogs"} 
-    Set-Alias sz "$env:ProgramFiles\7-Zip\7z.exe"
-
     sz e "$CLIENT_FILENAME`-$LAST_MODPACK_VERSION.zip" manifest.json
     Rename-Item -Path manifest.json -NewName oldmanifest.json
     sz e "$CLIENT_FILENAME`-$MODPACK_VERSION.zip" manifest.json
