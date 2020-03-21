@@ -45,6 +45,9 @@ $CLIENT_RELEASE_TYPE = "alpha"
 #  SERVER FILE SETTINGS
 #=====================================================================//
 
+# In the format @("filename", "filename")
+$CLIENT_MODS_TO_REMOVE_FROM_SERVER_FILES = @()
+    
 # Default: "$CLIENT_FILENAME Server $MODPACK_VERSION"
 $SERVER_FILENAME = "$CLIENT_FILENAME Server $MODPACK_VERSION"
 
@@ -90,13 +93,6 @@ $ENABLE_SERVER_FILE_MODULE = $true
 # Default: $false
 $ENABLE_CHANGELOG_GENERATOR_MODULE=$false
 $LAST_MODPACK_VERSION = "0.9.0"
-
-# Toggle removal and re-download of jars on/off.
-# Setting this to true will ensure that you always have the latest 
-# Twitch Export Builder and ChangelogGenerator, but increases the
-# amount of time the script takes to finish.
-# Default: $false
-$ENABLE_ALWAYS_UPDATE_JARS = $false
 
 # Toggles extra logging on/off.
 # Recommended if you're having trouble making the Modpack Uploader
