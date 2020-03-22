@@ -33,6 +33,7 @@ $MODPACK_VERSION = "1.0.0"
 # Last Version Of The Modpack
 # Needed For Changelog Parsing
 $LAST_MODPACK_VERSION = "0.9.0"
+$LAST_MODPACK_ZIP_NAME = "$CLIENT_NAME-$LAST_MODPACK_VERSION"
 
 # Modpacks Forge Version: 
 # Default: "14.23.5.2836"

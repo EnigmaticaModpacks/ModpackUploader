@@ -76,7 +76,7 @@ if ($ENABLE_CHANGELOG_GENERATOR_MODULE -and $ENABLE_MODPACK_UPLOADER_MODULE) {
 		Rename-Item -Path $ChangelogGeneratorDL -NewName ChangelogGenerator.jar -ErrorAction SilentlyContinue
     }
     Remove-Item old.json, new.json, shortchangelog.txt, MOD_CHANGELOGS.txt -ErrorAction SilentlyContinue
-    sz e -bd "$CLIENT_NAME-$LAST_MODPACK_VERSION.zip" manifest.json
+    sz e -bd "$LAST_MODPACK_ZIP_NAME.zip" manifest.json
     Rename-Item -Path manifest.json -NewName old.json
     sz e -bd "$CLIENT_ZIP_NAME.zip" manifest.json
     Rename-Item -Path manifest.json -NewName new.json
