@@ -7,8 +7,8 @@
 
 $CURSEFORGE_USER = "MyUserName"
 
-# For details see: https://authors.curseforge.com/account/api-tokens
-$CURSEFORGE_TOKEN = 1111111
+# For details see: https://www.curseforge.com/account/api-tokens
+$CURSEFORGE_TOKEN = "1111111"
 
 # ProjectID can be found on the modpack's Curseforge Projects page, under "About This Project"
 $CURSEFORGE_PROJECT_ID = 999999
@@ -27,20 +27,31 @@ $ChangelogGeneratorDL = "ChangelogGenerator-2.0.0-pre3.jar"
 #  MODPACK & CLIENT FILE SETTINGS
 # =====================================================================//
 
-# Default: "1.0.0"
+# Version Of The Modpack
 $MODPACK_VERSION = "1.0.0"
 
+# Last Version Of The Modpack
+# Needed For Changelog Parsing
+$LAST_MODPACK_VERSION = "0.9.0"
+$LAST_MODPACK_ZIP_NAME = "$CLIENT_NAME-$LAST_MODPACK_VERSION"
+
+# Modpacks Forge Version: 
+# Default: "14.23.5.2836"
 $FORGE_VERSION=14.23.5.2836
 
-$CLIENT_FILENAME = "MyModpack"
+# Name of the Modpack in the ZIP File
+$CLIENT_NAME = "MyModpack"
+$CLIENT_ZIP_NAME = "$CLIENT_NAME-$MODPACK_VERSION"
 
-# Default: "$CLIENT_FILENAME $MODPACK_VERSION"
-$CLIENT_FILE_DISPLAY_NAME = "$CLIENT_FILENAME $MODPACK_VERSION"
+# Display Name of the Modpack on CurseForge
+# Default: "$CLIENT_FANCY_NAME $MODPACK_VERSION"
+$CLIENT_FANCY_NAME = "My Modpack"
+$CLIENT_FILE_DISPLAY_NAME = "$CLIENT_FANCY_NAME $MODPACK_VERSION"
 
 # An array of compatible game versions of Minecraft.
 # See GameVersions.json for possible versions.
-# Default: @(6756) - which is Minecraft 1.12.2
-
+# @(6756) - is Minecraft 1.12.2
+# @(7722) - is Minecraft 1.15.2
 $GAME_VERSIONS = @(6756)
 
 # Can be "markdown", "text" or "html"
@@ -58,12 +69,12 @@ $CLIENT_RELEASE_TYPE = "alpha"
 
 # In the format @("filename", "filename")
 $CLIENT_MODS_TO_REMOVE_FROM_SERVER_FILES = @()
-    
+
 # Default: "$CLIENT_FILENAME Server $MODPACK_VERSION"
-$SERVER_FILENAME = "$CLIENT_FILENAME Server $MODPACK_VERSION"
+$SERVER_ZIP_NAME = "$CLIENT_NAME-Server-$MODPACK_VERSION"
 
 # Default: $SERVER_FILENAME
-$SERVER_FILE_DISPLAY_NAME = $SERVER_FILENAME
+$SERVER_FILE_DISPLAY_NAME = "$CLIENT_FANCY_NAME Server $MODPACK_VERSION"
 
 # A continuous line of the folders and files (with extensions) to zip into Server Files.
 # Default: @("mods", "config")
@@ -100,10 +111,8 @@ $ENABLE_SERVER_FILE_MODULE = $true
 
 # Toggle automatic changelog generator on/off
 # This module requires an older modpack manifest zip to be present, 
-# $LAST_MODPACK_VERSION must be set, and the manifest naming must be consistent.
 # Default: $false
 $ENABLE_CHANGELOG_GENERATOR_MODULE=$false
-$LAST_MODPACK_VERSION = "0.9.0"
 
 # Toggle removal and re-download of jars on/off.	
 # Setting this to true will ensure that you always have the latest 	
