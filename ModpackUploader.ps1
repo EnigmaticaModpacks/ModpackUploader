@@ -179,6 +179,7 @@ if ($ENABLE_SERVER_FILE_MODULE -and $ENABLE_MODPACK_UPLOADER_MODULE) {
     Write-Host "######################################" -ForegroundColor Cyan
     Write-Host ""
 
+    Remove-Item "Server.zip" -Recurse -Force -ErrorAction SilentlyContinue
     sz a -tzip "Server.zip" $CONTENTS_TO_ZIP
     Remove-Item "$SERVER_ZIP_NAME.zip" -Recurse -Force -ErrorAction SilentlyContinue
 
