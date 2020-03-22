@@ -1,5 +1,32 @@
 . .\settings.ps1
 
+function Download-GithubRelease {	
+    param(	
+        [parameter(Mandatory=$true)]	
+        [string]	
+        $repo,	
+        [parameter(Mandatory=$true)]	
+        [string]	
+        $file	
+    )	
+
+    $releases = "https://api.github.com/repos/$repo/releases"	
+
+    Write-Host "Determining latest release of $repo"	
+    [Net.ServicePointManager]::SecurityProtocol = [Net.SecurityProtocolType]::Tls12	
+    $tag = (Invoke-WebRequest -Uri $releases -UseBasicParsing | ConvertFrom-Json)[0].tag_name	
+
+    $download = "https://github.com/$repo/releases/download/$tag/$file"	
+    $name = $file.Split(".")[0]	
+
+    Write-Host Dowloading...	
+    [Net.ServicePointManager]::SecurityProtocol = [Net.SecurityProtocolType]::Tls12	
+    Invoke-WebRequest $download -Out $file	
+
+    # Cleaning up target dir	
+    Remove-Item $name -Recurse -Force -ErrorAction SilentlyContinue	
+}	
+
 function Clear-SleepHost {
     Start-Sleep 2
     Clear-Host
@@ -9,23 +36,27 @@ if (-not (test-path "$env:ProgramFiles\7-Zip\7z.exe")) {throw "$env:ProgramFiles
     Set-Alias sz "$env:ProgramFiles\7-Zip\7z.exe"
 
 if ($ENABLE_MANIFEST_BUILDER_MODULE) {
-    $TwitchExportBuilder = "TwitchExportBuilder.exe"
-    if (!(Test-Path $TwitchExportBuilder) -or $ENABLE_ALWAYS_UPDATE_JARS) {
-        Write-Host "You need to download the TwitchExportBuilder to use the MANIFEST_BUILDER_MODULE" -ForegroundColor Red
+    if (!(Test-Path TwitchExportBuilder.exe) -or $ENABLE_ALWAYS_UPDATE_JARS) {
+        Remove-Item TwitchExportBuilder.exe -Recurse -Force -ErrorAction SilentlyContinue
+        Download-GithubRelease -repo "Gaz492/twitch-export-builder" -file $TwitchExportBuilderDL	
+		Rename-Item -Path $TwitchExportBuilderDL -NewName TwitchExportBuilder.exe -ErrorAction SilentlyContinue	
     }
     .\TwitchExportBuilder.exe -n "$CLIENT_FILENAME" -p "$MODPACK_VERSION"
     Clear-SleepHost
 }
 
 if ($ENABLE_CHANGELOG_GENERATOR_MODULE -and $ENABLE_MODPACK_UPLOADER_MODULE) {
-    if (!(Test-Path $ChangelogGenerator) -or $ENABLE_ALWAYS_UPDATE_JARS) {
-        Write-Host "You need to download the ChangelogGenerator to use the CHANGELOG_GENERATOR_MODULE" -ForegroundColor Red
+    if (!(Test-Path ChangelogGenerator.jar) -or $ENABLE_ALWAYS_UPDATE_JARS) {
+        Remove-Item ChangelogGenerator.jar -Recurse -Force -ErrorAction SilentlyContinue
+        Download-GithubRelease -repo "TheRandomLabs/ChangelogGenerator" -file $ChangelogGeneratorDL
+		Rename-Item -Path $ChangelogGeneratorDL -NewName ChangelogGenerator.jar -ErrorAction SilentlyContinue
     }
 
-    Remove-Item oldmanifest.json, manifest.json, shortchangelog.txt, MOD_CHANGELOGS.txt -ErrorAction SilentlyContinue
+    Remove-Item old.json, new.json, shortchangelog.txt, MOD_CHANGELOGS.txt -ErrorAction SilentlyContinue
     sz e "$CLIENT_FILENAME`-$LAST_MODPACK_VERSION.zip" manifest.json
-    Rename-Item -Path manifest.json -NewName oldmanifest.json
+    Rename-Item -Path manifest.json -NewName old.json
     sz e "$CLIENT_FILENAME`-$MODPACK_VERSION.zip" manifest.json
+    Rename-Item -Path manifest.json -NewName new.json
 
     Clear-SleepHost
     Write-Host "######################################" -ForegroundColor Cyan
@@ -33,7 +64,7 @@ if ($ENABLE_CHANGELOG_GENERATOR_MODULE -and $ENABLE_MODPACK_UPLOADER_MODULE) {
     Write-Host "Generating changelog..." -ForegroundColor Green
     Write-Host ""
 
-    java -jar ChangelogGenerator.jar oldmanifest.json manifest.json
+    java -jar ChangelogGenerator.jar
     Rename-Item -Path changelog.txt -NewName MOD_CHANGELOGS.txt
 }
 
@@ -123,6 +154,14 @@ if ($ENABLE_SERVER_FILE_MODULE -and $ENABLE_MODPACK_UPLOADER_MODULE) {
 
     $SERVER_FILENAME = "$SERVER_FILENAME.zip"
     sz a -tzip $SERVER_FILENAME $CONTENTS_TO_ZIP
+
+    Write-Host "Removing Client Mods from Server Files" -ForegroundColor Cyan
+    foreach ($clientMod in $CLIENT_MODS_TO_REMOVE_FROM_SERVER_FILES) {
+        Write-Host "Removing Client Mod $clientMod"
+        sz d $SERVER_FILENAME "mods/$clientMod*" | Out-Null
+    }
+
+    Start-Sleep 3
 
     Write-Host "Removing Client Mods from Server Files" -ForegroundColor Cyan
     foreach ($clientMod in $CLIENT_MODS_TO_REMOVE_FROM_SERVER_FILES) {

@@ -13,6 +13,16 @@ $CURSEFORGE_TOKEN = 1111111
 # ProjectID can be found on the modpack's Curseforge Projects page, under "About This Project"
 $CURSEFORGE_PROJECT_ID = 999999
 
+#=====================================================================//
+#  DEPENDENCIES URL
+#=====================================================================//
+
+# File name of the latest https://github.com/Gaz492/twitch-export-builder/releases
+$TwitchExportBuilderDL = "twitch-export-builder_windows_amd64.exe"
+
+# File name of the latest https://github.com/TheRandomLabs/ChangelogGenerator/releases
+$ChangelogGeneratorDL = "ChangelogGenerator-2.0.0-pre3.jar"
+
 # =====================================================================//
 #  MODPACK & CLIENT FILE SETTINGS
 # =====================================================================//
@@ -30,6 +40,7 @@ $CLIENT_FILE_DISPLAY_NAME = "$CLIENT_FILENAME $MODPACK_VERSION"
 # An array of compatible game versions of Minecraft.
 # See GameVersions.json for possible versions.
 # Default: @(6756) - which is Minecraft 1.12.2
+
 $GAME_VERSIONS = @(6756)
 
 # Can be "markdown", "text" or "html"
@@ -93,6 +104,13 @@ $ENABLE_SERVER_FILE_MODULE = $true
 # Default: $false
 $ENABLE_CHANGELOG_GENERATOR_MODULE=$false
 $LAST_MODPACK_VERSION = "0.9.0"
+
+# Toggle removal and re-download of jars on/off.	
+# Setting this to true will ensure that you always have the latest 	
+# Twitch Export Builder and ChangelogGenerator, but increases the	
+# amount of time the script takes to finish.	
+# Default: $false	
+$ENABLE_ALWAYS_UPDATE_JARS = $false
 
 # Toggles extra logging on/off.
 # Recommended if you're having trouble making the Modpack Uploader
