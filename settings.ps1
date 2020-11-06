@@ -18,7 +18,8 @@ $CURSEFORGE_PROJECT_ID = 999999
 #=====================================================================//
 
 # File name of the latest https://github.com/Gaz492/twitch-export-builder/releases
-$TwitchExportBuilderDL = "twitch-export-builder_windows_amd64.exe"
+$TwitchExportBuilderDLWindows = "twitch-export-builder_windows_amd64.exe"
+$TwitchExportBuilderDLLinux = "twitch-export-builder_linux_amd64"
 
 # File name of the latest https://github.com/TheRandomLabs/ChangelogGenerator/releases
 $ChangelogGeneratorDL = "ChangelogGenerator-2.0.0-pre3.jar"
@@ -28,20 +29,20 @@ $ChangelogGeneratorDL = "ChangelogGenerator-2.0.0-pre3.jar"
 # =====================================================================//
 
 # Version Of The Modpack
-$MODPACK_VERSION = "1.0.0"
-
-# Last Version Of The Modpack
-# Needed For Changelog Parsing
-$LAST_MODPACK_VERSION = "0.9.0"
-$LAST_MODPACK_ZIP_NAME = "$CLIENT_NAME-$LAST_MODPACK_VERSION"
-
-# Modpacks Forge Version: 
-# Default: "14.23.5.2836"
-$FORGE_VERSION=14.23.5.2836
+$MODPACK_VERSION = "1.0.1"
 
 # Name of the Modpack in the ZIP File
 $CLIENT_NAME = "MyModpack"
 $CLIENT_ZIP_NAME = "$CLIENT_NAME-$MODPACK_VERSION"
+
+# Last Version Of The Modpack
+# Needed For Changelog Parsing
+$LAST_MODPACK_VERSION = "1.0.0"
+$LAST_MODPACK_ZIP_NAME = "$CLIENT_NAME-$LAST_MODPACK_VERSION"
+
+# Modpacks Forge Version:
+# Default: "14.23.5.2854"
+$FORGE_VERSION=14.23.5.2854
 
 # Display Name of the Modpack on CurseForge
 # Default: "$CLIENT_FANCY_NAME $MODPACK_VERSION"
@@ -110,15 +111,15 @@ $ENABLE_MODPACK_UPLOADER_MODULE = $true
 $ENABLE_SERVER_FILE_MODULE = $true
 
 # Toggle automatic changelog generator on/off
-# This module requires an older modpack manifest zip to be present, 
+# This module requires an older modpack manifest zip to be present,
 # Default: $false
 $ENABLE_CHANGELOG_GENERATOR_MODULE=$false
 
-# Toggle removal and re-download of jars on/off.	
-# Setting this to true will ensure that you always have the latest 	
-# Twitch Export Builder and ChangelogGenerator, but increases the	
-# amount of time the script takes to finish.	
-# Default: $false	
+# Toggle removal and re-download of jars on/off.
+# Setting this to true will ensure that you always have the latest
+# Twitch Export Builder and ChangelogGenerator, but increases the
+# amount of time the script takes to finish.
+# Default: $false
 $ENABLE_ALWAYS_UPDATE_JARS = $false
 
 # Toggles extra logging on/off.

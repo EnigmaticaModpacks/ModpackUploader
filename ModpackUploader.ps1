@@ -1,54 +1,91 @@
 . .\settings.ps1
 
-function Download-GithubRelease {	
-    param(	
-        [parameter(Mandatory=$true)]	
-        [string]	
-        $repo,	
+function Download-GithubRelease {
+    param(
         [parameter(Mandatory=$true)]
-        [string]	
-        $file	
-    )	
+        [string]
+        $repo,
+        [parameter(Mandatory=$true)]
+        [string]
+        $file
+    )
 
-    $releases = "https://api.github.com/repos/$repo/releases"	
+    $releases = "https://api.github.com/repos/$repo/releases"
 
-    Write-Host "Determining latest release of $repo"	
-    [Net.ServicePointManager]::SecurityProtocol = [Net.SecurityProtocolType]::Tls12	
-    $tag = (Invoke-WebRequest -Uri $releases -UseBasicParsing | ConvertFrom-Json)[0].tag_name	
+    Write-Host "Determining latest release of $repo"
+    [Net.ServicePointManager]::SecurityProtocol = [Net.SecurityProtocolType]::Tls12
+    $tag = (Invoke-WebRequest -Uri $releases -UseBasicParsing | ConvertFrom-Json)[0].tag_name
 
-    $download = "https://github.com/$repo/releases/download/$tag/$file"	
-    $name = $file.Split(".")[0]	
+    $download = "https://github.com/$repo/releases/download/$tag/$file"
 
-    Write-Host Dowloading...	
-    [Net.ServicePointManager]::SecurityProtocol = [Net.SecurityProtocolType]::Tls12	
-    Invoke-WebRequest $download -Out $file	
+    if ($IsWindows) {
+        $name = $file.Split(".")[0]
+    }
 
-    # Cleaning up target dir	
-    Remove-Item $name -Recurse -Force -ErrorAction SilentlyContinue	
-}	
+    Write-Host Dowloading...
+    [Net.ServicePointManager]::SecurityProtocol = [Net.SecurityProtocolType]::Tls12
+    Invoke-WebRequest $download -Out $file
+
+    # Cleaning up target dir
+    if ($IsWindows) {
+        Remove-Item $name -Recurse -Force -ErrorAction SilentlyContinue
+    }
+}
 
 function Clear-SleepHost {
     Start-Sleep 2
     Clear-Host
 }
+if ($IsLinux) {
+    #Lets Check if the user has 7-Zip Installed
+    if (-not (test-path "/usr/bin/7z")) {Write-Host "7-Zip needed to use the ModpackUploader."}
+        Set-Alias sz "7z"
 
-if (-not (test-path "$env:ProgramFiles\7-Zip\7z.exe")) {throw "$env:ProgramFiles\7-Zip\7z.exe needed to use the ModpackUploader."} 
-    Set-Alias sz "$env:ProgramFiles\7-Zip\7z.exe"
+    #Lets Check if the user has Curl Installed
+    if (-not (test-path "/usr/bin/curl")) {Write-Host "Curl needed to use the ModpackUploader."}
+        Set-Alias cl "curl"
 
-if (-not (test-path "$env:C:\Windows\System32\curl.exe")) {throw "$env:Windows\System32\curl.exe needed to use the ModpackUploader."} 
-    Set-Alias cl "$env:C:\Windows\System32\curl.exe"
+    #If Program is NOT installed KILL
+    if (-not (test-path "/usr/bin/7z")) {Break}
+    if (-not (test-path "/usr/bin/curl")) {Break}
+}
+elseif ($IsWindows) {
+    #Lets Check if the user has 7-Zip Installed
+    if (-not (test-path "$env:ProgramFiles\7-Zip\7z.exe")) {Write-Host "7-Zip needed to use the ModpackUploader."}
+        Set-Alias sz "$env:ProgramFiles\7-Zip\7z.exe"
+
+    #Lets Check if the user has Curl Installed
+    if (-not (test-path "$env:C:\Windows\System32\curl.exe")) {Write-Host "Curl needed to use the ModpackUploader."}
+        Set-Alias cl "$env:C:\Windows\System32\curl.exe"
+
+    #If Program is NOT installed KILL
+    if (-not (test-path "$env:ProgramFiles\7-Zip\7z.exe")) {Break}
+    if (-not (test-path "$env:C:\Windows\System32\curl.exe")) {Break}
+}
 
 if ($ENABLE_MANIFEST_BUILDER_MODULE) {
-    if (!(Test-Path TwitchExportBuilder.exe) -or $ENABLE_ALWAYS_UPDATE_JARS) {
+    #Lets Check if the user has Twitch Export Builder Installed
+    if (!(Test-Path TwitchExportBuilder) -or !(Test-Path TwitchExportBuilder.exe) -or $ENABLE_ALWAYS_UPDATE_JARS) {
         Write-Host "######################################" -ForegroundColor Cyan
         Write-Host ""
         Write-Host "Downloading Twitch Export Builder..." -ForegroundColor Green
         Write-Host ""
         Write-Host "######################################" -ForegroundColor Cyan
         Write-Host ""
-        Remove-Item TwitchExportBuilder.exe -Recurse -Force -ErrorAction SilentlyContinue
-        Download-GithubRelease -repo "Gaz492/twitch-export-builder" -file $TwitchExportBuilderDL	
-		Rename-Item -Path $TwitchExportBuilderDL -NewName TwitchExportBuilder.exe -ErrorAction SilentlyContinue	
+        if ($IsLinux) {
+            #Lets remove the existing copy and grab a fresh copy
+            Remove-Item ./TwitchExportBuilder -Recurse -Force -ErrorAction SilentlyContinue
+            Download-GithubRelease -repo "Gaz492/twitch-export-builder" -file ./$TwitchExportBuilderDLLinux
+            Rename-Item -Path ./$TwitchExportBuilderDLLinux -NewName ./TwitchExportBuilder -ErrorAction SilentlyContinue
+            #Lets also mark it executable
+            chmod +x ./TwitchExportBuilder
+        }
+        elseif ($IsWindows) {
+            #Lets remove the existing copy and grab a fresh copy
+            Remove-Item TwitchExportBuilder.exe -Recurse -Force -ErrorAction SilentlyContinue
+            Download-GithubRelease -repo "Gaz492/twitch-export-builder" -file $TwitchExportBuilderDLWindows
+            Rename-Item -Path $TwitchExportBuilderDLWindows -NewName TwitchExportBuilder.exe -ErrorAction SilentlyContinue
+        }
     }
     Clear-SleepHost
     Write-Host "######################################" -ForegroundColor Cyan
@@ -57,9 +94,18 @@ if ($ENABLE_MANIFEST_BUILDER_MODULE) {
     Write-Host ""
     Write-Host "######################################" -ForegroundColor Cyan
     Write-Host ""
+    #Lets remove the existing copy of the same version incase it exists due to failed attempts
     Remove-Item "$CLIENT_ZIP_NAME.zip" -Recurse -Force -ErrorAction SilentlyContinue
-    .\TwitchExportBuilder.exe -n "$CLIENT_NAME" -p "$MODPACK_VERSION"
-	Rename-Item -Path "$CLIENT_NAME-$MODPACK_VERSION.zip" -NewName "$CLIENT_ZIP_NAME.zip" -ErrorAction SilentlyContinue
+    if ($IsLinux) {
+        #Lets compile the Curse Manifest
+        ./TwitchExportBuilder -n "$CLIENT_NAME" -p "$MODPACK_VERSION"
+    }
+    elseif ($IsWindows) {
+        #Lets compile the Curse Manifest
+        .\TwitchExportBuilder.exe -n "$CLIENT_NAME" -p "$MODPACK_VERSION"
+    }
+    #Now lets rename it to the name you selected in the settings.ps1
+    Rename-Item -Path "$CLIENT_NAME-$MODPACK_VERSION.zip" -NewName "$CLIENT_ZIP_NAME.zip" -ErrorAction SilentlyContinue
     Clear-SleepHost
 }
 
@@ -73,7 +119,7 @@ if ($ENABLE_CHANGELOG_GENERATOR_MODULE -and $ENABLE_MODPACK_UPLOADER_MODULE) {
         Write-Host ""
         Remove-Item ChangelogGenerator.jar -Recurse -ErrorAction SilentlyContinue
         Download-GithubRelease -repo "TheRandomLabs/ChangelogGenerator" -file $ChangelogGeneratorDL
-		Rename-Item -Path $ChangelogGeneratorDL -NewName ChangelogGenerator.jar -ErrorAction SilentlyContinue
+        Rename-Item -Path $ChangelogGeneratorDL -NewName ChangelogGenerator.jar -ErrorAction SilentlyContinue
     }
     Remove-Item old.json, new.json, shortchangelog.txt, MOD_CHANGELOGS.txt -ErrorAction SilentlyContinue
     sz e -bd "$LAST_MODPACK_ZIP_NAME.zip" manifest.json
@@ -113,7 +159,7 @@ if ($ENABLE_GITHUB_CHANGELOG_GENERATOR_MODULE) {
     Clear-SleepHost
     if ($ENABLE_EXTRA_LOGGING) {
         Write-Host "Release Data:"
-        Write-Host $Body 
+        Write-Host $Body
     }
 
     Write-Host ""
@@ -133,7 +179,7 @@ if ($ENABLE_GITHUB_CHANGELOG_GENERATOR_MODULE) {
 if ($ENABLE_MODPACK_UPLOADER_MODULE) {
 
 
-    $CLIENT_METADATA = 
+    $CLIENT_METADATA =
     "{
     'changelog': `'$CLIENT_CHANGELOG`',
     'changelogType': `'$CLIENT_CHANGELOG_TYPE`',
@@ -141,11 +187,11 @@ if ($ENABLE_MODPACK_UPLOADER_MODULE) {
     'gameVersions': [$GAME_VERSIONS],
     'releaseType': `'$CLIENT_RELEASE_TYPE`'
     }"
-    
+
     Clear-SleepHost
     if ($ENABLE_EXTRA_LOGGING) {
         Write-Host "Client Metadata:"
-        Write-Host $CLIENT_METADATA 
+        Write-Host $CLIENT_METADATA
     }
 
     Write-Host ""
@@ -189,10 +235,10 @@ if ($ENABLE_SERVER_FILE_MODULE -and $ENABLE_MODPACK_UPLOADER_MODULE) {
         sz d Server.zip "mods/$clientMod*" | Out-Null
     }
     Rename-Item -Path Server.zip -NewName "$SERVER_ZIP_NAME.zip"
-    
+
     Start-Sleep 3
 
-    $SERVER_METADATA = 
+    $SERVER_METADATA =
     "{
     'changelog': `'$SERVER_CHANGELOG`',
     'changelogType': `'$SERVER_CHANGELOG_TYPE`',
