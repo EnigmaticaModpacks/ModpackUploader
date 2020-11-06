@@ -1,0 +1,1 @@
+pwsh ModpackUploader.ps1

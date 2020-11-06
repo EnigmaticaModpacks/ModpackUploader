@@ -1,1 +1,1 @@
-curl -H X-Api-Token:INSERT-TOKEN-HERE https://minecraft.curseforge.com/api/game/versions >> GameVersions.json
+PowerShell.exe -NoProfile -ExecutionPolicy Bypass -Command "& {Start-Process PowerShell -ArgumentList '-NoProfile -ExecutionPolicy Bypass -File ""%~dpn0.ps1""'}"
