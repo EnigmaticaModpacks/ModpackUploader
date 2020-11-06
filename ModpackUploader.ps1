@@ -2,10 +2,10 @@
 
 function Download-GithubRelease {
     param(
-        [parameter(Mandatory=$true)]
+        [parameter(Mandatory = $true)]
         [string]
         $repo,
-        [parameter(Mandatory=$true)]
+        [parameter(Mandatory = $true)]
         [string]
         $file
     )
@@ -38,29 +38,38 @@ function Clear-SleepHost {
 }
 if ($IsLinux) {
     #Lets Check if the user has 7-Zip Installed
-    if (-not (test-path "/usr/bin/7z")) {Write-Host "7-Zip needed to use the ModpackUploader."}
-        Set-Alias sz "7z"
+    if (-not (test-path "/usr/bin/7z")) { 
+        Write-Host "7-Zip needed to use the ModpackUploader."
+        #If Program is NOT installed stop the script
+        return
+    }
+    Set-Alias sz "7z"
 
     #Lets Check if the user has Curl Installed
-    if (-not (test-path "/usr/bin/curl")) {Write-Host "Curl needed to use the ModpackUploader."}
-        Set-Alias cl "curl"
+    if (-not (test-path "/usr/bin/curl")) { 
+        Write-Host "Curl needed to use the ModpackUploader." 
+        #If Program is NOT installed stop the script
+        return
+    }
+    Set-Alias cl "curl"
 
-    #If Program is NOT installed KILL
-    if (-not (test-path "/usr/bin/7z")) {Break}
-    if (-not (test-path "/usr/bin/curl")) {Break}
 }
 elseif ($IsWindows) {
     #Lets Check if the user has 7-Zip Installed
-    if (-not (test-path "$env:ProgramFiles\7-Zip\7z.exe")) {Write-Host "7-Zip needed to use the ModpackUploader."}
-        Set-Alias sz "$env:ProgramFiles\7-Zip\7z.exe"
+    if (-not (test-path "$env:ProgramFiles\7-Zip\7z.exe")) {
+        Write-Host "7-Zip needed to use the ModpackUploader."
+        #If Program is NOT installed stop the script
+        return 
+    }
+    Set-Alias sz "$env:ProgramFiles\7-Zip\7z.exe"
 
     #Lets Check if the user has Curl Installed
-    if (-not (test-path "$env:C:\Windows\System32\curl.exe")) {Write-Host "Curl needed to use the ModpackUploader."}
-        Set-Alias cl "$env:C:\Windows\System32\curl.exe"
-
-    #If Program is NOT installed KILL
-    if (-not (test-path "$env:ProgramFiles\7-Zip\7z.exe")) {Break}
-    if (-not (test-path "$env:C:\Windows\System32\curl.exe")) {Break}
+    if (-not (test-path "$env:C:\Windows\System32\curl.exe")) {
+        Write-Host "Curl needed to use the ModpackUploader."
+        #If Program is NOT installed stop the script
+        return 
+    }
+    Set-Alias cl "$env:C:\Windows\System32\curl.exe"
 }
 
 if ($ENABLE_MANIFEST_BUILDER_MODULE) {
@@ -148,12 +157,12 @@ if ($ENABLE_GITHUB_CHANGELOG_GENERATOR_MODULE) {
     };
 
     $Body = @{
-        tag_name = $MODPACK_VERSION;
+        tag_name         = $MODPACK_VERSION;
         target_commitish = 'master';
-        name = $MODPACK_VERSION;
-        body = $CLIENT_CHANGELOG;
-        draft = $false;
-        prerelease = $false;
+        name             = $MODPACK_VERSION;
+        body             = $CLIENT_CHANGELOG;
+        draft            = $false;
+        prerelease       = $false;
     } | ConvertTo-Json;
 
     Clear-SleepHost
@@ -173,7 +182,7 @@ if ($ENABLE_GITHUB_CHANGELOG_GENERATOR_MODULE) {
     [Net.ServicePointManager]::SecurityProtocol = [Net.SecurityProtocolType]::Tls12
     Invoke-RestMethod -Headers $Headers -Uri $Uri -Body $Body -Method Post
 
-	Start-Process Powershell.exe -Argument "-NoProfile -Command github_changelog_generator --since-tag $CHANGES_SINCE_VERSION"
+    Start-Process Powershell.exe -Argument "-NoProfile -Command github_changelog_generator --since-tag $CHANGES_SINCE_VERSION"
 }
 
 if ($ENABLE_MODPACK_UPLOADER_MODULE) {
