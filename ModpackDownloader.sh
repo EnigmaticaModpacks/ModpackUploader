@@ -1,0 +1,1 @@
+pwsh ModpackDownloader.ps1
