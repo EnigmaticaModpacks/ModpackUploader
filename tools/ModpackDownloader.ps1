@@ -73,4 +73,4 @@ Write-Host ""
 Write-Host "Downloading Mods...                   " -ForegroundColor Green
 Write-Host ""
 Write-Host "######################################" -ForegroundColor Cyan
-java -jar "tools/ModpackDownloader.jar" -manifest "mods.json" -folder "mods"
+java -jar tools/ModpackDownloader.jar -manifest mods.json -folder mods
