@@ -42,7 +42,7 @@ if ($IsLinux) {
     #Lets Check if the user has Curl Installed
     if (-not (test-path "/usr/bin/curl")) {
         Write-Error "Curl needed to use the ModpackUploader."
-        Break 
+        return 
     }
     Set-Alias cl "curl"
 }
@@ -50,7 +50,7 @@ elseif ($IsWindows) {
     #Lets Check if the user has 7-Zip Installed
     if (-not (test-path "$env:C:\Windows\System32\curl.exe")) {
         Write-Error "Curl needed to use the ModpackUploader."
-        Break 
+        return 
     }
     Set-Alias cl "$env:C:\Windows\System32\curl.exe"
 }
