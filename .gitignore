@@ -1,4 +1,11 @@
 #Binaries
-TwitchExportBuilder
-TwitchExportBuilder.exe
-ChangelogGenerator.jar
+tools/TwitchExportBuilder
+tools/TwitchExportBuilder.exe
+tools/ChangelogGenerator.jar
+tools/ModpackDownloader.jar
+
+#Local Files
+*.json
+*.zip
+!.build.json
+logs/

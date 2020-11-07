@@ -1,3 +1,4 @@
+Set-Location "$PSScriptRoot\.."
 . .\settings.ps1
 
 function Download-GithubRelease {
@@ -85,7 +86,8 @@ if ($ENABLE_MANIFEST_BUILDER_MODULE) {
             #Lets remove the existing copy and grab a fresh copy
             Remove-Item ./TwitchExportBuilder -Recurse -Force -ErrorAction SilentlyContinue
             Download-GithubRelease -repo "Gaz492/twitch-export-builder" -file ./$TwitchExportBuilderDLLinux
-            Rename-Item -Path ./$TwitchExportBuilderDLLinux -NewName ./TwitchExportBuilder -ErrorAction SilentlyContinue
+            New-Item "./tools" -ItemType "directory" -Force -ErrorAction SilentlyContinue
+            Rename-Item -Path ./$TwitchExportBuilderDLLinux -NewName ./tools/TwitchExportBuilder -ErrorAction SilentlyContinue
             #Lets also mark it executable
             chmod +x ./TwitchExportBuilder
         }
@@ -93,7 +95,7 @@ if ($ENABLE_MANIFEST_BUILDER_MODULE) {
             #Lets remove the existing copy and grab a fresh copy
             Remove-Item TwitchExportBuilder.exe -Recurse -Force -ErrorAction SilentlyContinue
             Download-GithubRelease -repo "Gaz492/twitch-export-builder" -file $TwitchExportBuilderDLWindows
-            Rename-Item -Path $TwitchExportBuilderDLWindows -NewName TwitchExportBuilder.exe -ErrorAction SilentlyContinue
+            Rename-Item -Path $TwitchExportBuilderDLWindows -NewName tools/TwitchExportBuilder.exe -ErrorAction SilentlyContinue
         }
     }
     Clear-SleepHost
@@ -115,6 +117,11 @@ if ($ENABLE_MANIFEST_BUILDER_MODULE) {
     }
     #Now lets rename it to the name you selected in the settings.ps1
     Rename-Item -Path "$CLIENT_NAME-$MODPACK_VERSION.zip" -NewName "$CLIENT_ZIP_NAME.zip" -ErrorAction SilentlyContinue
+    
+    #Nows lets extract the manifest.json from the ZIP for proper version controlling.
+    Remove-Item mods.json -Force -ErrorAction SilentlyContinue
+    7z e -bd "$CLIENT_ZIP_NAME.zip" manifest.json
+    Rename-Item -Path manifest.json -NewName mods.json -Force -ErrorAction SilentlyContinue
     Clear-SleepHost
 }
 
@@ -127,14 +134,16 @@ if ($ENABLE_CHANGELOG_GENERATOR_MODULE -and $ENABLE_MODPACK_UPLOADER_MODULE) {
         Write-Host "######################################" -ForegroundColor Cyan
         Write-Host ""
         Remove-Item ChangelogGenerator.jar -Recurse -ErrorAction SilentlyContinue
+        New-Item "./tools" -ItemType "directory" -Force -ErrorAction SilentlyContinue
         Download-GithubRelease -repo "TheRandomLabs/ChangelogGenerator" -file $ChangelogGeneratorDL
-        Rename-Item -Path $ChangelogGeneratorDL -NewName ChangelogGenerator.jar -ErrorAction SilentlyContinue
+        Rename-Item -Path $ChangelogGeneratorDL -NewName tools/ChangelogGenerator.jar -ErrorAction SilentlyContinue
     }
-    Remove-Item old.json, new.json, shortchangelog.txt, MOD_CHANGELOGS.txt -ErrorAction SilentlyContinue
+    Remove-Item old.json, changelog.txt, shortchangelog.txt, MOD_CHANGELOGS.txt -ErrorAction SilentlyContinue
+    #Lets Extract the old manifest from the previous version of the modpack
     sz e -bd "$LAST_MODPACK_ZIP_NAME.zip" manifest.json
     Rename-Item -Path manifest.json -NewName old.json
-    sz e -bd "$CLIENT_ZIP_NAME.zip" manifest.json
-    Rename-Item -Path manifest.json -NewName new.json
+    #Lets also use the current mods.json manifest for the changelog compilation as well
+    Rename-Item -Path mods.json -NewName new.json
     Clear-SleepHost
     Write-Host "######################################" -ForegroundColor Cyan
     Write-Host ""
@@ -142,9 +151,12 @@ if ($ENABLE_CHANGELOG_GENERATOR_MODULE -and $ENABLE_MODPACK_UPLOADER_MODULE) {
     Write-Host ""
     Write-Host "######################################" -ForegroundColor Cyan
     Write-Host ""
-    java -jar ChangelogGenerator.jar
-    Remove-Item MOD_CHANGELOGS.txt -Recurse -Force -ErrorAction SilentlyContinue
-    Rename-Item -Path changelog.txt -NewName MOD_CHANGELOGS.txt
+    #now lets make the changelog
+    java -jar tools/ChangelogGenerator.jar
+    #Lets revert the name now so this file stays
+    Rename-Item -Path new.json -NewName mods.json
+    #Also lets cleanup
+    Remove-Item old.json -ErrorAction SilentlyContinue
 }
 
 if ($ENABLE_GITHUB_CHANGELOG_GENERATOR_MODULE) {

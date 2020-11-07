@@ -24,6 +24,9 @@ $TwitchExportBuilderDLLinux = "twitch-export-builder_linux_amd64"
 # File name of the latest https://github.com/TheRandomLabs/ChangelogGenerator/releases
 $ChangelogGeneratorDL = "ChangelogGenerator-2.0.0-pre3.jar"
 
+# File name of the latest https://github.com/CrankySupertoon/ModPackDownloader/releases
+$ModpackDownloaderDL = "ModpackDownloader-cli-0.6.1.jar"
+
 # =====================================================================//
 #  MODPACK & CLIENT FILE SETTINGS
 # =====================================================================//
