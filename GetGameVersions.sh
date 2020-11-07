@@ -1,1 +1,1 @@
-pwsh GetGameVersions.ps1
+pwsh tools/GetGameVersions.ps1

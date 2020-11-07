@@ -1,1 +1,1 @@
-pwsh ModpackUploader.ps1
+pwsh tools/ModpackUploader.ps1
