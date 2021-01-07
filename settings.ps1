@@ -36,7 +36,7 @@ $ModpackDownloaderDL = "ModpackDownloader-cli-0.6.1.jar"
 # This is the Pack Name
 $CLIENT_FANCY_NAME = "My Modpack"
 
-# Name of the Modpack's in the ZIP File
+# Name of the Modpack in the ZIP File
 $CLIENT_NAME = "MyModpack"
 
 # Version Of The Modpack
