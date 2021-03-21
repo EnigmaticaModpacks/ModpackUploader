@@ -58,19 +58,28 @@ if ($IsLinux) {
 elseif ($IsWindows) {
     #Lets Check if the user has 7-Zip Installed
     if (-not (test-path "$env:ProgramFiles\7-Zip\7z.exe")) {
-        Write-Host "7-Zip needed to use the ModpackUploader."
-        #If Program is NOT installed stop the script
-        return 
-    }
+        if (test-path "7z.exe") {
+            Write-Host "7-Zip needed to use the ModpackUploader."
+            #If Program is NOT installed stop the script
+            return 
+    }}
     Set-Alias sz "$env:ProgramFiles\7-Zip\7z.exe"
+    if (test-path "curl.exe") {
+        Set-Alias sz "7z.exe"
+    }
+    
 
     #Lets Check if the user has Curl Installed
     if (-not (test-path "$env:C:\Windows\System32\curl.exe")) {
-        Write-Host "Curl needed to use the ModpackUploader."
-        #If Program is NOT installed stop the script
-        return 
-    }
+        if (test-path "curl.exe") {
+            Write-Host "Curl needed to use the ModpackUploader."
+            #If Program is NOT installed stop the script
+            return
+    }}
     Set-Alias cl "$env:C:\Windows\System32\curl.exe"
+    if (test-path "curl.exe") {
+        Set-Alias cl "curl.exe"
+    }
 }
 
 if ($ENABLE_MANIFEST_BUILDER_MODULE) {
@@ -87,7 +96,7 @@ if ($ENABLE_MANIFEST_BUILDER_MODULE) {
             Remove-Item ./TwitchExportBuilder -Recurse -Force -ErrorAction SilentlyContinue
             Download-GithubRelease -repo "Gaz492/twitch-export-builder" -file ./$TwitchExportBuilderDLLinux
             New-Item "./tools" -ItemType "directory" -Force -ErrorAction SilentlyContinue
-            Rename-Item -Path ./$TwitchExportBuilderDLLinux -NewName ./tools/TwitchExportBuilder -ErrorAction SilentlyContinue
+            Move-Item -Path "$TwitchExportBuilderDLLinux" -Destination ./tools/TwitchExportBuilder -ErrorAction SilentlyContinue
             #Lets also mark it executable
             chmod +x ./TwitchExportBuilder
         }
@@ -95,7 +104,7 @@ if ($ENABLE_MANIFEST_BUILDER_MODULE) {
             #Lets remove the existing copy and grab a fresh copy
             Remove-Item TwitchExportBuilder.exe -Recurse -Force -ErrorAction SilentlyContinue
             Download-GithubRelease -repo "Gaz492/twitch-export-builder" -file $TwitchExportBuilderDLWindows
-            Rename-Item -Path $TwitchExportBuilderDLWindows -NewName tools/TwitchExportBuilder.exe -ErrorAction SilentlyContinue
+            Move-Item -Path "$TwitchExportBuilderDLWindows" -Destination ./tools/TwitchExportBuilder.exe -ErrorAction SilentlyContinue
         }
     }
     Clear-SleepHost
