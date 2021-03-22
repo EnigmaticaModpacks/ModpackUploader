@@ -84,14 +84,14 @@ elseif ($IsWindows) {
 
 if ($ENABLE_MANIFEST_BUILDER_MODULE) {
     #Lets Check if the user has Twitch Export Builder Installed
-    if (!(Test-Path TwitchExportBuilder) -or !(Test-Path TwitchExportBuilder.exe) -or $ENABLE_ALWAYS_UPDATE_JARS) {
-        Write-Host "######################################" -ForegroundColor Cyan
-        Write-Host ""
-        Write-Host "Downloading Twitch Export Builder..." -ForegroundColor Green
-        Write-Host ""
-        Write-Host "######################################" -ForegroundColor Cyan
-        Write-Host ""
-        if ($IsLinux) {
+    if ($IsLinux) {
+        if (!(Test-Path ./tools/TwitchExportBuilder) -or $ENABLE_ALWAYS_UPDATE_JARS) {
+        	Write-Host "######################################" -ForegroundColor Cyan
+            Write-Host ""
+            Write-Host "Downloading Twitch Export Builder..." -ForegroundColor Green
+            Write-Host ""
+            Write-Host "######################################" -ForegroundColor Cyan
+            Write-Host ""
             #Lets remove the existing copy and grab a fresh copy
             Remove-Item ./TwitchExportBuilder -Recurse -Force -ErrorAction SilentlyContinue
             Download-GithubRelease -repo "Gaz492/twitch-export-builder" -file ./$TwitchExportBuilderDLLinux
@@ -100,10 +100,19 @@ if ($ENABLE_MANIFEST_BUILDER_MODULE) {
             #Lets also mark it executable
             chmod +x ./TwitchExportBuilder
         }
-        elseif ($IsWindows) {
+    }
+    elseif ($IsWindows) {
+        if (!(Test-Path ./tools/TwitchExportBuilder.exe) -or $ENABLE_ALWAYS_UPDATE_JARS) {
+        	Write-Host "######################################" -ForegroundColor Cyan
+            Write-Host ""
+            Write-Host "Downloading Twitch Export Builder..." -ForegroundColor Green
+            Write-Host ""
+            Write-Host "######################################" -ForegroundColor Cyan
+            Write-Host ""
             #Lets remove the existing copy and grab a fresh copy
             Remove-Item TwitchExportBuilder.exe -Recurse -Force -ErrorAction SilentlyContinue
             Download-GithubRelease -repo "Gaz492/twitch-export-builder" -file $TwitchExportBuilderDLWindows
+            New-Item "./tools" -ItemType directory -Force -ErrorAction SilentlyContinue
             Move-Item -Path "$TwitchExportBuilderDLWindows" -Destination ./tools/TwitchExportBuilder.exe -ErrorAction SilentlyContinue
         }
     }
@@ -118,11 +127,11 @@ if ($ENABLE_MANIFEST_BUILDER_MODULE) {
     Remove-Item "$CLIENT_ZIP_NAME.zip" -Recurse -Force -ErrorAction SilentlyContinue
     if ($IsLinux) {
         #Lets compile the Curse Manifest
-        ./TwitchExportBuilder -n "$CLIENT_NAME" -p "$MODPACK_VERSION"
+        ./tools/TwitchExportBuilder -n "$CLIENT_NAME" -p "$MODPACK_VERSION"
     }
     elseif ($IsWindows) {
         #Lets compile the Curse Manifest
-        .\TwitchExportBuilder.exe -n "$CLIENT_NAME" -p "$MODPACK_VERSION"
+        ./tools/TwitchExportBuilder.exe -n "$CLIENT_NAME" -p "$MODPACK_VERSION"
     }
     #Now lets rename it to the name you selected in the settings.ps1
     Rename-Item -Path "$CLIENT_NAME-$MODPACK_VERSION.zip" -NewName "$CLIENT_ZIP_NAME.zip" -ErrorAction SilentlyContinue
