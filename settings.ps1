@@ -101,7 +101,7 @@ $CONTENTS_TO_ZIP = @("mods", "config")
 
 # Toggles CurseForge Client Files Generation
 # Default: $true
-$ENABLE_MANIFEST_BUILDER_MODULE = $true
+$ENABLE_CURSE_CLIENT_MODULE = $true
 
 # Toggles Modpack Uploading to CurseForge
 # Setting this to $false will also disable the Server File and Changelog Generator Modules.
