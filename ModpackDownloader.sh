@@ -1,2 +1,1 @@
-cd tools
-pwsh ModpackDownloader.ps1
+cd tools && pwsh ModpackDownloader.ps1
