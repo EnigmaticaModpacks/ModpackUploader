@@ -7,9 +7,6 @@
 
 $CURSEFORGE_USER = "MyUserName"
 
-# For details see: https://www.curseforge.com/account/api-tokens
-$CURSEFORGE_TOKEN = "1111111"
-
 # ProjectID can be found on the modpack's Curseforge Projects page, under "About This Project"
 $CURSEFORGE_PROJECT_ID = 999999
 
@@ -21,10 +18,10 @@ $CURSEFORGE_PROJECT_ID = 999999
 # File name of the latest https://github.com/Gaz492/twitch-export-builder/releases
 $TwitchExportBuilderDLWindows = "twitch-export-builder_windows_amd64.exe"
 $TwitchExportBuilderDLLinux = "twitch-export-builder_linux_amd64"
-$TwichExportBuilderDLMac = "twitch-export-builder_darwin_amd64"
+$TwitchExportBuilderDLMac = "twitch-export-builder_darwin_amd64"
 
 # File name of the latest https://github.com/TheRandomLabs/ChangelogGenerator/releases
-$ChangelogGeneratorDL = "ChangelogGenerator-2.0.0-pre5.jar"
+$ChangelogGeneratorDL = "ChangelogGenerator-2.0.0-pre10.jar"
 
 # File name of the latest https://github.com/CrankySupertoon/ModPackDownloader/releases
 $ModpackDownloaderDL = "ModpackDownloader-cli-0.6.1.jar"

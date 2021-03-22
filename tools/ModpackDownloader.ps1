@@ -40,15 +40,15 @@ function Clear-SleepHost {
 }
 
 #Download the Mod Pack Downloader Tool
-if (!(Test-Path "ModpackDownloader.jar") -or $ENABLE_ALWAYS_UPDATE_JARS) {
+if (!(Test-Path "./tools/ModpackDownloader.jar") -or $ENABLE_ALWAYS_UPDATE_JARS) {
     Write-Host "######################################" -ForegroundColor Cyan
     Write-Host ""
     Write-Host "Downloading Modpack Downloader...     " -ForegroundColor Green
     Write-Host ""
     Write-Host "######################################" -ForegroundColor Cyan
-    Download-GithubRelease -repo "CrankySupertoon/ModPackDownloader" -file $ModpackDownloaderDL
+    Download-GithubRelease -repo "NoraTheGamer/ModPackDownloader" -file $ModpackDownloaderDL
     New-Item "./tools" -ItemType directory -Force -ErrorAction SilentlyContinue
-    Move-Item -Path "$ModpackDownloaderDL" -Destination "tools/ModpackDownloader.jar"
+    Move-Item -Path "$ModpackDownloaderDL" -Destination "tools/ModpackDownloader.jar" -Force -ErrorAction SilentlyContinue
 }
 
 #Now lets download the mods

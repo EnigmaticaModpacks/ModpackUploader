@@ -1,5 +1,6 @@
-Set-Location "$PSScriptRoot\.."
+Set-Location ".."
 . .\settings.ps1
+. .\secrets.ps1
 
 function Download-GithubRelease {
     param(
@@ -38,6 +39,7 @@ function Clear-SleepHost {
     Clear-Host
 }
 if ($IsLinux) {
+
     #Lets Check if the user has 7-Zip Installed
     if (-not (test-path "/usr/bin/7z")) { 
         Write-Host "7-Zip needed to use the ModpackUploader."
@@ -48,7 +50,26 @@ if ($IsLinux) {
 
     #Lets Check if the user has Curl Installed
     if (-not (test-path "/usr/bin/curl")) { 
-        Write-Host "Curl needed to use the ModpackUploader." 
+        Write-Host "Curl needed to use the ModpackUploader."
+        #If Program is NOT installed stop the script
+        return
+    }
+    Set-Alias cl "curl"
+
+}
+elseif ($IsMacOS) {
+
+    #Lets Check if the user has 7-Zip Installed
+    if (-not (test-path "/usr/local/bin/7z")) { 
+        Write-Host "7-Zip needed to use the ModpackUploader."
+        #If Program is NOT installed stop the script
+        return
+    }
+    Set-Alias sz "7z"
+
+    #Lets Check if the user has Curl Installed
+    if (-not (test-path "/usr/bin/curl")) { 
+        Write-Host "Curl needed to use the ModpackUploader."
         #If Program is NOT installed stop the script
         return
     }
@@ -56,33 +77,33 @@ if ($IsLinux) {
 
 }
 elseif ($IsWindows) {
-    #Lets Check if the user has 7-Zip Installed
-    if (-not (test-path "$env:ProgramFiles\7-Zip\7z.exe")) {
-        if (test-path "7z.exe") {
-            Write-Host "7-Zip needed to use the ModpackUploader."
-            #If Program is NOT installed stop the script
-            return 
-    }}
-    Set-Alias sz "$env:ProgramFiles\7-Zip\7z.exe"
-    if (test-path "curl.exe") {
-        Set-Alias sz "7z.exe"
+    if (test-path "$env:ProgramFiles\7-Zip\7z.exe") {
+        Set-Alias sz "$env:ProgramFiles\7-Zip\7z.exe"
     }
-    
+    elseif (test-path "$env:USERPROFILE/scoop/apps/7zip/current/7z.exe") {
+        Set-Alias sz "$env:USERPROFILE/scoop/apps/7zip/current/7z.exe"
+    }
+    else {
+        Write-Host "7-Zip needed to use the ModpackUploader."
+        #If Program is NOT installed stop the script
+        return 
+    }
 
     #Lets Check if the user has Curl Installed
-    if (-not (test-path "$env:C:\Windows\System32\curl.exe")) {
-        if (test-path "curl.exe") {
-            Write-Host "Curl needed to use the ModpackUploader."
-            #If Program is NOT installed stop the script
-            return
-    }}
-    Set-Alias cl "$env:C:\Windows\System32\curl.exe"
-    if (test-path "curl.exe") {
-        Set-Alias cl "curl.exe"
+    if (-not (test-path "C:\Windows\System32\curl.exe")) {
+        Set-Alias cl "C:\Windows\System32\curl.exe"
+    }
+    elseif (test-path "$env:USERPROFILE/scoop/apps/curl/current/bin/curl.exe") {
+        Set-Alias cl "$env:USERPROFILE/scoop/apps/curl/current/bin/curl.exe"
+    }
+    else {
+        Write-Host "cURL needed to use the ModpackUploader."
+        #If Program is NOT installed stop the script
+        return 
     }
 }
 
-if ($ENABLE_MANIFEST_BUILDER_MODULE) {
+if ($ENABLE_CURSE_CLIENT_MODULE) {
     #Lets Check if the user has Twitch Export Builder Installed
     if ($IsLinux) {
         if (!(Test-Path ./tools/TwitchExportBuilder) -or $ENABLE_ALWAYS_UPDATE_JARS) {
@@ -99,6 +120,40 @@ if ($ENABLE_MANIFEST_BUILDER_MODULE) {
             Move-Item -Path "$TwitchExportBuilderDLLinux" -Destination ./tools/TwitchExportBuilder -ErrorAction SilentlyContinue
             #Lets also mark it executable
             chmod +x ./TwitchExportBuilder
+        }
+    }
+    if ($IsMacOS) {
+        if (!(Test-Path ./tools/TwitchExportBuilder) -or $ENABLE_ALWAYS_UPDATE_JARS) {
+        	Write-Host "######################################" -ForegroundColor Cyan
+            Write-Host ""
+            Write-Host "Downloading Twitch Export Builder..." -ForegroundColor Green
+            Write-Host ""
+            Write-Host "######################################" -ForegroundColor Cyan
+            Write-Host ""
+            #Lets remove the existing copy and grab a fresh copy
+            Remove-Item ./TwitchExportBuilder -Recurse -Force -ErrorAction SilentlyContinue
+            Download-GithubRelease -repo "Gaz492/twitch-export-builder" -file ./$TwitchExportBuilderDLMac
+            New-Item "./tools" -ItemType "directory" -Force -ErrorAction SilentlyContinue
+            Move-Item -Path "$TwitchExportBuilderDLMac" -Destination ./tools/TwitchExportBuilder -ErrorAction SilentlyContinue
+            #Lets also mark it executable
+            chmod +x ./tools/TwitchExportBuilder
+        }
+    }
+    elseif ($IsLinux) {
+        if (!(Test-Path ./tools/TwitchExportBuilder) -or $ENABLE_ALWAYS_UPDATE_JARS) {
+        	Write-Host "######################################" -ForegroundColor Cyan
+            Write-Host ""
+            Write-Host "Downloading Twitch Export Builder..." -ForegroundColor Green
+            Write-Host ""
+            Write-Host "######################################" -ForegroundColor Cyan
+            Write-Host ""
+            #Lets remove the existing copy and grab a fresh copy
+            Remove-Item ./TwitchExportBuilder -Recurse -Force -ErrorAction SilentlyContinue
+            Download-GithubRelease -repo "Gaz492/twitch-export-builder" -file ./$TwitchExportBuilderDLLinux
+            New-Item "./tools" -ItemType "directory" -Force -ErrorAction SilentlyContinue
+            Move-Item -Path "$TwitchExportBuilderDLLinux" -Destination ./tools/TwitchExportBuilder -ErrorAction SilentlyContinue
+            #Lets also mark it executable
+            chmod +x ./tools/TwitchExportBuilder
         }
     }
     elseif ($IsWindows) {
@@ -125,7 +180,8 @@ if ($ENABLE_MANIFEST_BUILDER_MODULE) {
     Write-Host ""
     #Lets remove the existing copy of the same version incase it exists due to failed attempts
     Remove-Item "$CLIENT_ZIP_NAME.zip" -Recurse -Force -ErrorAction SilentlyContinue
-    if ($IsLinux) {
+    Remove-Item "tmp" -Recurse -Force -ErrorAction SilentlyContinue
+    if ($IsLinux -or $IsMacOS) {
         #Lets compile the Curse Manifest
         ./tools/TwitchExportBuilder -n "$CLIENT_NAME" -p "$MODPACK_VERSION"
     }
@@ -138,13 +194,14 @@ if ($ENABLE_MANIFEST_BUILDER_MODULE) {
     
     #Nows lets extract the manifest.json from the ZIP for proper version controlling.
     Remove-Item mods.json -Force -ErrorAction SilentlyContinue
-    7z e -bd "$CLIENT_ZIP_NAME.zip" manifest.json
+    sz e -bd "$CLIENT_ZIP_NAME.zip" manifest.json
     Rename-Item -Path manifest.json -NewName mods.json -Force -ErrorAction SilentlyContinue
+    Remove-Item "tmp" -Recurse -Force -ErrorAction SilentlyContinue
     Clear-SleepHost
 }
 
 if ($ENABLE_CHANGELOG_GENERATOR_MODULE -and $ENABLE_MODPACK_UPLOADER_MODULE) {
-    if (!(Test-Path ChangelogGenerator.jar) -or $ENABLE_ALWAYS_UPDATE_JARS) {
+    if (!(Test-Path "./tools/ChangelogGenerator.jar") -or $ENABLE_ALWAYS_UPDATE_JARS) {
         Write-Host "######################################" -ForegroundColor Cyan
         Write-Host ""
         Write-Host "Downloading Modpack Chanelog Generator..." -ForegroundColor Green
@@ -154,14 +211,10 @@ if ($ENABLE_CHANGELOG_GENERATOR_MODULE -and $ENABLE_MODPACK_UPLOADER_MODULE) {
         Remove-Item ChangelogGenerator.jar -Recurse -ErrorAction SilentlyContinue
         New-Item "./tools" -ItemType "directory" -Force -ErrorAction SilentlyContinue
         Download-GithubRelease -repo "TheRandomLabs/ChangelogGenerator" -file $ChangelogGeneratorDL
-        Rename-Item -Path $ChangelogGeneratorDL -NewName tools/ChangelogGenerator.jar -ErrorAction SilentlyContinue
+        Move-Item -Path "$ChangelogGeneratorDL" -Destination ./tools/ChangelogGenerator.jar -ErrorAction SilentlyContinue
     }
-    Remove-Item old.json, changelog.txt, shortchangelog.txt, MOD_CHANGELOGS.txt -ErrorAction SilentlyContinue
     #Lets Extract the old manifest from the previous version of the modpack
-    sz e -bd "$LAST_MODPACK_ZIP_NAME.zip" manifest.json
-    Rename-Item -Path manifest.json -NewName old.json
     #Lets also use the current mods.json manifest for the changelog compilation as well
-    Rename-Item -Path mods.json -NewName new.json
     Clear-SleepHost
     Write-Host "######################################" -ForegroundColor Cyan
     Write-Host ""
@@ -170,11 +223,8 @@ if ($ENABLE_CHANGELOG_GENERATOR_MODULE -and $ENABLE_MODPACK_UPLOADER_MODULE) {
     Write-Host "######################################" -ForegroundColor Cyan
     Write-Host ""
     #now lets make the changelog
-    java -jar tools/ChangelogGenerator.jar
-    #Lets revert the name now so this file stays
-    Rename-Item -Path new.json -NewName mods.json
-    #Also lets cleanup
-    Remove-Item old.json -ErrorAction SilentlyContinue
+    New-Item "./changelog" -ItemType "directory" -Force -ErrorAction SilentlyContinue
+    java -jar tools/ChangelogGenerator.jar -m -n "$CLIENT_ZIP_NAME.zip" -o "$LAST_CLIENT_ZIP_NAME.zip" -O "./changelog/$MODPACK_VERSION.md"
 }
 
 if ($ENABLE_GITHUB_CHANGELOG_GENERATOR_MODULE) {
@@ -254,7 +304,7 @@ if ($ENABLE_MODPACK_UPLOADER_MODULE) {
     Start-Sleep -Seconds 1
 }
 
-if ($ENABLE_SERVER_FILE_MODULE -and $ENABLE_MODPACK_UPLOADER_MODULE) {
+if ($ENABLE_SERVER_FILE_MODULE) {
     Clear-SleepHost
     Write-Host ""
     Write-Host "######################################" -ForegroundColor Cyan
@@ -264,8 +314,12 @@ if ($ENABLE_SERVER_FILE_MODULE -and $ENABLE_MODPACK_UPLOADER_MODULE) {
     Write-Host "######################################" -ForegroundColor Cyan
     Write-Host ""
 
+    Remove-Item "tmp" -Recurse -Force -ErrorAction SilentlyContinue
+    Copy-Item -Path "server/" -Destination "tmp" -Recurse -Force -ErrorAction SilentlyContinue
+    Copy-Item -Path $SERVER_CONTENTS_TO_ZIP -Destination "tmp" -Recurse -Force -ErrorAction SilentlyContinue
+
     Remove-Item "Server.zip" -Recurse -Force -ErrorAction SilentlyContinue
-    sz a -tzip "Server.zip" $CONTENTS_TO_ZIP
+    sz a -tzip "Server.zip" $SERVER_CONTENTS_TO_ZIP
     Remove-Item "$SERVER_ZIP_NAME.zip" -Recurse -Force -ErrorAction SilentlyContinue
 
     Write-Host "Removing Client Mods from Server Files" -ForegroundColor Cyan
@@ -273,9 +327,15 @@ if ($ENABLE_SERVER_FILE_MODULE -and $ENABLE_MODPACK_UPLOADER_MODULE) {
         Write-Host "Removing Client Mod $clientMod"
         sz d Server.zip "mods/$clientMod*" | Out-Null
     }
+
     Rename-Item -Path Server.zip -NewName "$SERVER_ZIP_NAME.zip"
+    Remove-Item "tmp" -Recurse -Force -ErrorAction SilentlyContinue
 
     Start-Sleep 3
+}
+
+
+if ($ENABLE_SERVER_FILE_MODULE -and $ENABLE_MODPACK_UPLOADER_MODULE) {
 
     $SERVER_METADATA =
     "{
