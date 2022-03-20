@@ -332,7 +332,7 @@ function Push-ServerFiles {
 }
 
 function New-GitHubRelease {
-    if ($ENABLE_GITHUB_CHANGELOG_GENERATOR_MODULE) {
+    if ($ENABLE_GITHUB_RELEASE_MODULE) {
 
         $Base64Token = [System.Convert]::ToBase64String([char[]]$GITHUB_TOKEN);
         $Uri = "https://api.github.com/repos/$GITHUB_NAME/$GITHUB_REPOSITORY/releases?access_token=$GITHUB_TOKEN"
