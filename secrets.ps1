@@ -5,6 +5,7 @@
 #  CURSEFORGE ACCOUNT SETTINGS
 # =====================================================================//
 
+# Get one here: https://authors.curseforge.com/account/api-tokens
 $CURSEFORGE_TOKEN = "My-Token"
 
 # =====================================================================//
