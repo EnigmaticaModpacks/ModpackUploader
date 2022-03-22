@@ -9,10 +9,11 @@ Almost everything can be toggled on/off in the settings.
 
 ## Getting Started
 
-1. Download the latest release.
-2. Fill in the `settings.ps1` file with the appropriate information.
-3. Fill in the `secrets.ps1` file with the appropriate information.
-4. Run the `modpack-uploader.ps1` when you're ready to upload your modpack update.
+1. Download the latest release, and unzip into your modpack instance.
+   - You can place it in a subfolder, but you need to change the `$INSTANCE_ROOT` in the `settings.ps1` file.
+2. Fill in the `settings.ps1` file with your modpack information.
+3. Fill in the `secrets.ps1` file with your CurseForge Upload API Token.
+4. Run the `modpack-uploader.ps1` when you're ready to upload your modpack.
 
 ## Dependencies
 
