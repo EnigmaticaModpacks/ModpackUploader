@@ -1,9 +1,10 @@
 # Settings for the ModpackUploader
 # For details/help see: https://github.com/NillerMedDild/ModpackUploader
 
-# The main modpack folder
-# Do not change or move unless you know what you're doing
-$INSTANCE_ROOT = ("$PSScriptRoot/.." | Resolve-Path)
+# The path to the main modpack folder. (the same folder as the mods folder is in)
+# Running the modpack uploader from the main modpack folder: ("$PSScriptRoot" | Resolve-Path)
+# Running the modpacker uploader from a subfolder: ("$PSScriptRoot/.." | Resolve-Path)
+$INSTANCE_ROOT = ("$PSScriptRoot" | Resolve-Path)
 
 # =====================================================================//
 #  CURSEFORGE ACCOUNT SETTINGS
@@ -33,6 +34,7 @@ $MODPACK_VERSION = "1.0.1"
 
 # Last Version Of The Modpack
 # Needed For Changelog Parsing
+# Should be "$null" if this is the first release
 $LAST_MODPACK_VERSION = "1.0.0"
 
 # =====================================================================//
@@ -61,7 +63,7 @@ $GAME_VERSIONS = @(8203)
 $CLIENT_RELEASE_TYPE = "beta"
 
 #=====================================================================//
-#  DEPENDENCIES URL
+#  DEPENDENCIES
 #=====================================================================//
 
 # File name of the latest https://github.com/TheRandomLabs/ChangelogGenerator/releases
@@ -116,11 +118,15 @@ $ENABLE_SERVER_FILE_MODULE = $true
 # This module requires an older modpack manifest zip to be present, 
 # $LAST_MODPACK_VERSION must be set, and the manifest naming must be consistent.
 # Default: $false
-$ENABLE_CHANGELOG_GENERATOR_MODULE = $true
+$ENABLE_CHANGELOG_GENERATOR_MODULE = $false
+# Path to the ChangelogGenerator's output file
+$CHANGELOG_PATH = "$INSTANCE_ROOT/changelogs/changelog_mods_$MODPACK_VERSION.md"
 
 # Toggle creation of a modlist file on/off
 # Default: $true
 $ENABLE_MODLIST_CREATOR_MODULE = $true
+# Path to the ModListCreator's output file
+$MODLIST_PATH = "$INSTANCE_ROOT/changelogs/modlist_$MODPACK_VERSION.md"
 
 # Toggle removal and re-download of jars on/off.
 # Setting this to true will ensure that you always have the latest 
@@ -168,9 +174,3 @@ $SERVER_ZIP_NAME = "$CLIENT_NAME`Server-$MODPACK_VERSION"
 
 # Default: $SERVER_FILENAME
 $SERVER_FILE_DISPLAY_NAME = "MyModpack Server $MODPACK_VERSION"
-
-# Path to the ModListCreator's output file
-$MODLIST_PATH = "$INSTANCE_ROOT/changelogs/modlist_$MODPACK_VERSION.md"
-
-# Path to the ChangelogGenerator's output file
-$CHANGELOG_PATH = "$INSTANCE_ROOT/changelogs/changelog_mods_$MODPACK_VERSION.md"
