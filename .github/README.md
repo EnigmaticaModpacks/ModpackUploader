@@ -7,6 +7,15 @@ When the upload has completed, server files are attached which are generated fro
 
 Almost everything can be toggled on/off in the settings.
 
+✔️ Features:
+
+- Client ZIP file creation and upload with the `CLIENT_FILE_MODULE` and `MODPACK_UPLOADER_MODULE` ✔️ On by default
+- Server ZIP file creation and upload with the `SERVER_FILE_MODULE` and `MODPACK_UPLOADER_MODULE` ✔️ On by default
+- Automatic updating of `modpackUrl` in ServerStarter's `server-setup-config.yaml` ❌ _Off by default_
+- Grab the changelogs of all the mods updated in your new release with the `CHANGELOG_GENERATOR_MODULE` ❌ _Off by default_
+- Make a modlist complete with links to the mods and authors with the `MODLIST_CREATOR_MODULE` ✔️ _On by default_
+- Make a new GitHub release when you upload your modpack with the `GITHUB_RELEASE_MODULE` ❌ _Off by default_
+
 ## Getting Started
 
 1. Download the latest release, and unzip into your modpack instance.
@@ -24,9 +33,7 @@ Almost everything can be toggled on/off in the settings.
   - [Linux Download Instructions](https://docs.microsoft.com/en-us/powershell/scripting/install/installing-powershell-on-linux)
   - [Mac Download Instructions](https://docs.microsoft.com/en-us/powershell/scripting/install/installing-powershell-on-macos)
 
-### Credits
-
-A big thanks goes out to:
+### Special Thanks
 
 [TheRandomLabs](https://github.com/TheRandomLabs), for their [Changelog Generator](https://github.com/TheRandomLabs/ChangelogGenerator), which allows this project to incoorperate the changelogs of the mods that are updated.
 
