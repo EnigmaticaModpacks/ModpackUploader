@@ -103,7 +103,7 @@ $SERVER_SETUP_CONFIG_PATH = "$SERVER_FILES_FOLDER/server-setup-config.yaml"
 
 # Toggle automatic building of the manifest zip on/off
 # Default: $true
-$ENABLE_CURSE_CLIENT_MODULE = $true
+$ENABLE_CLIENT_FILE_MODULE = $true
 
 # Toggle the modpack uploader on/off
 # Setting this to $false will also disable the Server File and Changelog Generator Modules.
@@ -113,6 +113,12 @@ $ENABLE_MODPACK_UPLOADER_MODULE = $true
 # Toggle server file feature on/off
 # Default: $true
 $ENABLE_SERVER_FILE_MODULE = $true
+
+# Toggle serverstarter compatibility on/off
+# This will update the "modpackUrl" in the file found at $SERVER_SETUP_CONFIG_PATH
+# to point to your newly created client files on the CurseForge CDN.
+# Default: $false
+$ENABLE_SERVERSTARTER_MODULE = $false
 
 # Toggle automatic changelog generator on/off
 # This module requires an older modpack manifest zip to be present, 
