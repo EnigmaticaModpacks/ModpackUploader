@@ -12,6 +12,12 @@ $CURSEFORGE_TOKEN = "My-Token"
 #  GITHUB COMPATIBILITY SETTINGS
 # =====================================================================//
 
+# Example for this repo:
+# https://github.com/EnigmaticaModpacks/ModpackUploader
+# https://github.com/$GITHUB_NAME/$GITHUB_REPOSITORY
+# $GITHUB_NAME = "EnigmaticaModpacks"
+# $GITHUB_REPOSITORY = "ModpackUploader"
+
 $GITHUB_NAME = "MyGitHubUsername"
 
 $GITHUB_REPOSITORY = "MyModpack"
