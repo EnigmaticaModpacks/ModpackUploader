@@ -37,6 +37,11 @@ $MODPACK_VERSION = "1.0.1"
 # Should be "$null" if this is the first release
 $LAST_MODPACK_VERSION = "1.0.0"
 
+# Which modloader the modpack uses
+# Can be "forge" or "fabric"
+# default: "forge"
+$MODLOADER = "forge"
+
 # =====================================================================//
 #  CHANGELOG SETTINGS
 # =====================================================================//
