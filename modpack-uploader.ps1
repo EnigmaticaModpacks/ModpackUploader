@@ -117,9 +117,9 @@ function New-ManifestJson {
     $mods = [System.Collections.ArrayList]@()
     foreach ($addon in $minecraftInstanceJson.installedAddons) {
         $mods.Add(@{
-                required  	= $true
-                projectID 	= $addon.addonID
-                fileID    	= $addon.installedFile.id
+                required    = $true
+                projectID   = $addon.addonID
+                fileID      = $addon.installedFile.id
                 downloadUrl = $addon.installedFile.downloadUrl
             }) > $null
     }
@@ -274,7 +274,9 @@ function Update-FileLinkInServerFiles {
         $idPart1 = Remove-LeadingZero -text $idPart1
         $idPart2 = $clientFileIdString.Substring(4, $clientFileIdString.length - 4)
         $idPart2 = Remove-LeadingZero -text $idPart2
-        $curseForgeCdnUrl = "https://media.forgecdn.net/files/$idPart1/$idPart2/$CLIENT_ZIP_NAME.zip"
+        # CurseForge replaces whitespace in filenames with + in their CDN urls
+        $sanitizedClientZipName = $CLIENT_ZIP_NAME.Replace(" ", "+")
+        $curseForgeCdnUrl = "https://media.forgecdn.net/files/$idPart1/$idPart2/$sanitizedClientZipName.zip"
         $content = (Get-Content -Path $SERVER_SETUP_CONFIG_PATH) -replace "https://media.forgecdn.net/files/\d+/\d+/.*.zip", $curseForgeCdnUrl 
         [System.IO.File]::WriteAllLines(($SERVER_SETUP_CONFIG_PATH | Resolve-Path), $content)
 
