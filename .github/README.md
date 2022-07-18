@@ -34,6 +34,6 @@ Almost everything can be toggled on/off in the settings.
 
 - [TheRandomLabs](https://github.com/TheRandomLabs), for their [Changelog Generator](https://github.com/TheRandomLabs/ChangelogGenerator), which allows this project to incoorperate the changelogs of the mods that are updated.
 
-- [CrankySupertoon](https://github.com/CrankySupertoon), for her help in improving this tool while making it easier to use.
+- [UnicorNora](https://github.com/UnicorNora), for their help in improving this tool while making it easier to use.
 
 - [ModdingX](https://github.com/ModdingX) for their project [Modlist Creator](https://github.com/ModdingX/ModListCreator), which allows this project to create nice looking modlists.
