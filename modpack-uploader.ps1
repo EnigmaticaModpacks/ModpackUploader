@@ -6,15 +6,15 @@ $overridesFolder = "overrides"
 $secretsFile = "secrets.ps1"
 
 function Validate-SecretsFile {
-    if (!(Test-Path "$PSScriptRoot\$secretsFile")) {
+    if (!(Test-Path "$PSScriptRoot/$secretsFile")) {
         Write-Host "You need a valid CurseForge API Token in a $secretsFile file" -ForegroundColor Red
         Write-Host "Creating $secretsFile" -ForegroundColor Cyan
         New-Item -Path $PSScriptRoot -ItemType File -Name $secretsFile -Value "# To generate an API token go to: https://authors.curseforge.com/account/api-tokens `n $CURSEFORGE_TOKEN = `"your-curseforge-token-here`""
     }
 }
 
-. "$PSScriptRoot\settings.ps1"
-. "$PSScriptRoot\$secretsFile"
+. "$PSScriptRoot/settings.ps1"
+. "$PSScriptRoot/$secretsFile"
 
 
 function Get-GitHubRelease {
@@ -216,7 +216,7 @@ function Push-ClientFiles {
             Remove-BlacklistedFiles
         }
 
-        #$CLIENT_CHANGELOG = Get-Content -Path "$PSScriptRoot\..\changelogs\changelog.md"
+        #$CLIENT_CHANGELOG = Get-Content -Path "$PSScriptRoot/../changelogs/changelog.md"
 
         $CLIENT_METADATA = 
         "{
@@ -296,8 +296,8 @@ function New-ServerFiles {
         Write-Host 
         Write-Host "Creating server files..." -ForegroundColor Cyan
         Write-Host 
-        7z a -tzip $serverZip "$SERVER_FILES_FOLDER\*"
-        Move-Item -Path "automation\$serverZip" -Destination $serverZip -ErrorAction SilentlyContinue
+        7z a -tzip $serverZip "$SERVER_FILES_FOLDER/*"
+        Move-Item -Path "automation/$serverZip" -Destination $serverZip -ErrorAction SilentlyContinue
         Write-Host "Server files created!" -ForegroundColor Green
 
         if ($ENABLE_MODPACK_UPLOADER_MODULE) {
@@ -381,11 +381,11 @@ function Update-Modlist {
         }
 
         Remove-Item $MODLIST_PATH -ErrorAction SilentlyContinue
-        java -jar $MODLIST_CREATOR_JAR --markdown --output ".\" --detailed --manifest "$CLIENT_ZIP_NAME.zip"
+        java -jar $MODLIST_CREATOR_JAR --markdown --output "./" --detailed --manifest "$CLIENT_ZIP_NAME.zip"
         Copy-Item -Path "MODLIST.md" -Destination $MODLIST_PATH -ErrorAction SilentlyContinue
         Move-Item -Path "MODLIST.md" -Destination "MODLIST.md" -ErrorAction SilentlyContinue -Force
-        Copy-Item -Path "automation\MODLIST.md" -Destination $MODLIST_PATH -ErrorAction SilentlyContinue
-        Move-Item -Path "automation\MODLIST.md" -Destination "MODLIST.md" -ErrorAction SilentlyContinue -Force
+        Copy-Item -Path "automation/MODLIST.md" -Destination $MODLIST_PATH -ErrorAction SilentlyContinue
+        Move-Item -Path "automation/MODLIST.md" -Destination "MODLIST.md" -ErrorAction SilentlyContinue -Force
     }
 }
 
