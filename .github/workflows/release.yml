@@ -12,4 +12,8 @@ jobs:
         - name: Release
           uses: softprops/action-gh-release@v1
           with:
-            files: "*.ps1"
+            files: |
+              '*.ps1'
+              LICENSE
+            generate_release_notes: true
+            fail_on_unmatched_files: true
