@@ -7,10 +7,9 @@ on:
 
 jobs:
   release:
-    name: "Release"
     runs-on: "ubuntu-latest"
-
     steps:
-        uses: softprops/action-gh-release@v1
-        with:
-          files: "*.ps1"
+        - name: Release
+          uses: softprops/action-gh-release@v1
+          with:
+            files: "*.ps1"
