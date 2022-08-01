@@ -9,11 +9,15 @@ jobs:
   release:
     runs-on: "ubuntu-latest"
     steps:
+        - name: Checkout
+          uses: actions/checkout@v2
+          
         - name: Release
           uses: softprops/action-gh-release@v1
           with:
+            generate_release_notes: true
+            fail_on_unmatched_files: true
+            token: ${{ secrets.GITHUB_TOKEN }}
             files: |
               '*.ps1'
               LICENSE
-            generate_release_notes: true
-            fail_on_unmatched_files: true
