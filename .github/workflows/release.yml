@@ -19,5 +19,5 @@ jobs:
             fail_on_unmatched_files: true
             token: ${{ secrets.GITHUB_TOKEN }}
             files: |
-              '*.ps1'
+              *.ps1
               LICENSE
