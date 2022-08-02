@@ -52,7 +52,13 @@ function Test-ForDependencies {
         throw "7zip not command available. Please follow the instructions above." 
     }
 
-    $isCurlAvailable = Get-Command curl.exe
+    if ($IsWindows) {
+        $isCurlAvailable = Get-Command curl.exe
+    }
+    else {
+        $isCurlAvailable = Get-Command curl
+    }
+
     if (-not $isCurlAvailable) {
         Clear-Host
         Write-Host 
@@ -63,7 +69,7 @@ function Test-ForDependencies {
         Write-Host 
         Write-Host "When you're done, rerun this script.`n"
 
-        throw "curl.exe command not available. Please follow the instructions above." 
+        throw "curl or curl.exe command not available. Please follow the instructions above." 
     }
 }
 
@@ -236,14 +242,27 @@ function Push-ClientFiles {
         Write-Host "Uploading client files to https://minecraft.curseforge.com/api/projects/$CURSEFORGE_PROJECT_ID/upload-file" -ForegroundColor Green
         Write-Host
 
-        $response = curl.exe `
-            --url "https://minecraft.curseforge.com/api/projects/$CURSEFORGE_PROJECT_ID/upload-file" `
-            --user "$CURSEFORGE_USER`:$CURSEFORGE_TOKEN" `
-            -H "Accept: application/json" `
-            -H X-Api-Token:$CURSEFORGE_TOKEN `
-            -F metadata=$CLIENT_METADATA `
-            -F file=@"$CLIENT_ZIP_NAME.zip" `
-            --progress-bar | ConvertFrom-Json
+        if ($IsWindows) {
+            $response = curl.exe `
+                --url "https://minecraft.curseforge.com/api/projects/$CURSEFORGE_PROJECT_ID/upload-file" `
+                --user "$CURSEFORGE_USER`:$CURSEFORGE_TOKEN" `
+                -H "Accept: application/json" `
+                -H X-Api-Token:$CURSEFORGE_TOKEN `
+                -F metadata=$CLIENT_METADATA `
+                -F file=@"$CLIENT_ZIP_NAME.zip" `
+                --progress-bar | ConvertFrom-Json
+        }
+        else {
+            $response = curl `
+                --url "https://minecraft.curseforge.com/api/projects/$CURSEFORGE_PROJECT_ID/upload-file" `
+                --user "$CURSEFORGE_USER`:$CURSEFORGE_TOKEN" `
+                -H "Accept: application/json" `
+                -H X-Api-Token:$CURSEFORGE_TOKEN `
+                -F metadata=$CLIENT_METADATA `
+                -F file=@"$CLIENT_ZIP_NAME.zip" `
+                --progress-bar | ConvertFrom-Json
+        }
+
         $clientFileReturnId = $response.id
 
         if (-not $response.id) {
@@ -326,14 +345,27 @@ function Push-ServerFiles {
         Write-Host "Uploading server files..." -ForegroundColor Cyan
         Write-Host 
 
-        $serverFileResponse = curl.exe `
-            --url "https://minecraft.curseforge.com/api/projects/$CURSEFORGE_PROJECT_ID/upload-file" `
-            --user "$CURSEFORGE_USER`:$CURSEFORGE_TOKEN" `
-            -H "Accept: application/json" `
-            -H X-Api-Token:$CURSEFORGE_TOKEN `
-            -F metadata=$SERVER_METADATA `
-            -F file=@$serverFilePath `
-            --progress-bar | ConvertFrom-Json
+        if ($IsWindows) {
+
+            $serverFileResponse = curl.exe `
+                --url "https://minecraft.curseforge.com/api/projects/$CURSEFORGE_PROJECT_ID/upload-file" `
+                --user "$CURSEFORGE_USER`:$CURSEFORGE_TOKEN" `
+                -H "Accept: application/json" `
+                -H X-Api-Token:$CURSEFORGE_TOKEN `
+                -F metadata=$SERVER_METADATA `
+                -F file=@$serverFilePath `
+                --progress-bar | ConvertFrom-Json
+        }
+        else {
+            $serverFileResponse = curl `
+                --url "https://minecraft.curseforge.com/api/projects/$CURSEFORGE_PROJECT_ID/upload-file" `
+                --user "$CURSEFORGE_USER`:$CURSEFORGE_TOKEN" `
+                -H "Accept: application/json" `
+                -H X-Api-Token:$CURSEFORGE_TOKEN `
+                -F metadata=$SERVER_METADATA `
+                -F file=@$serverFilePath `
+                --progress-bar | ConvertFrom-Json
+        }
 
         if ($serverFileResponse.errorCode) {
             throw "Failed to upload server files: $serverFileResponse"
@@ -398,6 +430,14 @@ function Remove-LeadingZero {
 
 $startLocation = Get-Location
 Set-Location $INSTANCE_ROOT
+
+if ($null -eq $IsWindows -or $IsWindows) {
+    # The script is running on Windows, use curl.exe
+    $IsWindows = $true
+}
+else {
+    $IsWindows = $false
+}
 
 Test-ForDependencies
 Validate-SecretsFile
