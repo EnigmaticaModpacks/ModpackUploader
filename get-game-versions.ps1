@@ -10,4 +10,9 @@ function Validate-SecretsFile {
 
 . "$PSScriptRoot/$secretsFile"
 
-curl.exe -H X-Api-Token:$CURSEFORGE_TOKEN https://minecraft.curseforge.com/api/game/versions >> game-versions.json
+if ($null -eq $IsWindows -or $IsWindows) {
+    # The script is running on Windows, use curl.exe
+    curl.exe -H X-Api-Token:$CURSEFORGE_TOKEN https://minecraft.curseforge.com/api/game/versions >> game-versions.json
+} else {
+    curl -H X-Api-Token:$CURSEFORGE_TOKEN https://minecraft.curseforge.com/api/game/versions >> game-versions.json
+}
