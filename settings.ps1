@@ -71,11 +71,11 @@ $CLIENT_RELEASE_TYPE = "beta"
 #  DEPENDENCIES
 #=====================================================================//
 
-# File name of the latest https://github.com/TheRandomLabs/ChangelogGenerator/releases
-$CHANGELOG_GENERATOR_JAR = "ChangelogGenerator-2.0.0-pre10.jar"
+# File name of the latest https://github.com/ModdingX/ModListCreator/releases
+$CHANGELOG_GENERATOR_JAR = "ModListCreator-4.0.1-fatjar.jar"
 
-# File name of the latest https://github.com/MelanX/ModListCreator/releases
-$MODLIST_CREATOR_JAR = "ModListCreator-2.0.1.jar"
+# File name of the latest https://github.com/ModdingX/ModListCreator/releases
+$MODLIST_CREATOR_JAR = "ModListCreator-4.0.1-fatjar.jar"
 
 #=====================================================================//
 #  CLIENT FILE SETTINGS

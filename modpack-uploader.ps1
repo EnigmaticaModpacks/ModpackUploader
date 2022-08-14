@@ -187,24 +187,19 @@ function New-Changelog {
     ) {
         if (-not (Test-Path $CHANGELOG_GENERATOR_JAR) -or $ENABLE_ALWAYS_UPDATE_JARS) {
             Remove-Item $CHANGELOG_GENERATOR_JAR -Recurse -Force -ErrorAction SilentlyContinue
-            Get-GitHubRelease -repo "TheRandomLabs/ChangelogGenerator" -file $CHANGELOG_GENERATOR_JAR
+            Get-GitHubRelease -repo "ModdingX/ModListCreator" -file $CHANGELOG_GENERATOR_JAR
         }
-        $changelogFile = "changelog.md"
-        Remove-Item $changelogFile -ErrorAction SilentlyContinue
-
         Write-Host 
         Write-Host "Generating mod changelog..." -ForegroundColor Cyan
         Write-Host 
 
-        java -jar $CHANGELOG_GENERATOR_JAR `
-            --markdown `
-            --lines=50 `
-            --entries=1 `
-            --new="$CLIENT_ZIP_NAME.zip" `
-            --old="$LAST_MODPACK_ZIP_NAME.zip"
-
         Remove-Item $CHANGELOG_PATH -ErrorAction SilentlyContinue
-        Move-Item -Path $changelogFile -Destination $CHANGELOG_PATH
+
+        java -jar $CHANGELOG_GENERATOR_JAR `
+            changelog `
+            --output $CHANGELOG_PATH `
+            --new "$CLIENT_ZIP_NAME.zip" `
+            --old "$LAST_MODPACK_ZIP_NAME.zip"
 
         Write-Host "Mod changelog generated!" -ForegroundColor Green
     }
@@ -217,8 +212,8 @@ function Push-ClientFiles {
             Remove-BlacklistedFiles
         }
 
-        #$CLIENT_CHANGELOG = Get-Content -Path "$PSScriptRoot/../changelogs/changelog.md"
-
+        # This ugly json seems to be a necessity, 
+        # I have yet to get @{} and ConvertTo-Json to work with the CurseForge Upload API
         $CLIENT_METADATA = 
         "{
             changelog: `'$CLIENT_CHANGELOG`',
@@ -253,16 +248,15 @@ function Push-ClientFiles {
             Write-Host "Failed to upload client files: $response" -ForegroundColor Red
             throw "Failed to upload client files: $response"
         }
-        else {
-            Write-Host 
-            Write-Host "Uploaded modpack!" -ForegroundColor Green
-            Write-Host 
-            Write-Host "Return Id: $clientFileReturnId" -ForegroundColor Cyan
-            Write-Host
 
-            if ($ENABLE_SERVERSTARTER_MODULE) {
-                Update-FileLinkInServerFiles -ClientFileReturnId $clientFileReturnId
-            }
+        Write-Host 
+        Write-Host "Uploaded modpack!" -ForegroundColor Green
+        Write-Host 
+        Write-Host "Return Id: $clientFileReturnId" -ForegroundColor Cyan
+        Write-Host
+
+        if ($ENABLE_SERVERSTARTER_MODULE) {
+            Update-FileLinkInServerFiles -ClientFileReturnId $clientFileReturnId
         }
     }
 }
@@ -380,15 +374,12 @@ function Update-Modlist {
     if ($ENABLE_MODLIST_CREATOR_MODULE) {
         if (-not (Test-Path $MODLIST_CREATOR_JAR) -or $ENABLE_ALWAYS_UPDATE_JARS) {
             Remove-Item $MODLIST_CREATOR_JAR -Recurse -Force -ErrorAction SilentlyContinue
-            Get-GitHubRelease -repo "MelanX/ModListCreator" -file $MODLIST_CREATOR_JAR
+            Get-GitHubRelease -repo "ModdingX/ModListCreator" -file $MODLIST_CREATOR_JAR
         }
 
         Remove-Item $MODLIST_PATH -ErrorAction SilentlyContinue
-        java -jar $MODLIST_CREATOR_JAR --markdown --output "./" --detailed --manifest "$CLIENT_ZIP_NAME.zip"
-        Copy-Item -Path "MODLIST.md" -Destination $MODLIST_PATH -ErrorAction SilentlyContinue
-        Move-Item -Path "MODLIST.md" -Destination "MODLIST.md" -ErrorAction SilentlyContinue -Force
-        Copy-Item -Path "automation/MODLIST.md" -Destination $MODLIST_PATH -ErrorAction SilentlyContinue
-        Move-Item -Path "automation/MODLIST.md" -Destination "MODLIST.md" -ErrorAction SilentlyContinue -Force
+        java -jar $MODLIST_CREATOR_JAR modlist --output $MODLIST_PATH --detailed "$CLIENT_ZIP_NAME.zip"
+        Copy-Item -Path $MODLIST_PATH -Destination "$INSTANCE_ROOT/MODLIST.md"
     }
 }
 
