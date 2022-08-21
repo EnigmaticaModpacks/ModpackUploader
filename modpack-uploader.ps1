@@ -379,6 +379,10 @@ function Update-Modlist {
             Get-GitHubRelease -repo "ModdingX/ModListCreator" -file $MODLIST_CREATOR_JAR
         }
 
+        Write-Host
+        Write-Host "Generating Modlist..."
+        Write-Host
+	
         Remove-Item $MODLIST_PATH -ErrorAction SilentlyContinue
         java -jar $MODLIST_CREATOR_JAR modlist --output $MODLIST_PATH --detailed "$CLIENT_ZIP_NAME.zip"
         Copy-Item -Path $MODLIST_PATH -Destination "$INSTANCE_ROOT/MODLIST.md"
