@@ -94,6 +94,10 @@ function New-ClientFiles {
             Write-Host "Adding " -ForegroundColor Cyan -NoNewline
             Write-Host $_ -ForegroundColor Blue -NoNewline
             Write-Host " to client files." -ForegroundColor Cyan
+            $destinationFolder = "$overridesFolder/$_" | Split-Path
+            if (!(Test-Path -Path $destinationFolder)) {
+                New-Item $destinationFolder -Type Directory
+            }
             Copy-Item -Path $_ -Destination "$overridesFolder/$_" -Recurse
         }
 
