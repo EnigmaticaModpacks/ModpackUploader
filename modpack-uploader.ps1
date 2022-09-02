@@ -27,15 +27,21 @@ function Get-GitHubRelease {
         $file
     )
 	
-    $releases = "https://api.github.com/repos/$repo/releases"
+    $response = Invoke-RestMethod -Uri "https://api.github.com/repos/$repo/releases"
 
-    Write-Host "Determining latest release of $repo"
-    $tag = (Invoke-WebRequest -Uri $releases -UseBasicParsing | ConvertFrom-Json)[0].tag_name
+    $matchingRelease = $response.assets -match $file
+    if ($matchingRelease) {
+        $downloadUrl = $matchingRelease.browser_download_url
+    
+        Remove-Item $file -ErrorAction SilentlyContinue
 
-    $download = "https://github.com/$repo/releases/download/$tag/$file"
+        Write-Host "Dowloading $file..."
 
-    Write-Host "Dowloading..."
-    Invoke-WebRequest $download -Out $file
+        Invoke-RestMethod $downloadUrl -Out $file
+    }
+    else {
+        Write-Error "Found no files matching '$file' in the repository '$repo'"
+    }
 }
 
 function Test-ForDependencies {
