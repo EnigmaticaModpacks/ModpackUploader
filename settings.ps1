@@ -72,10 +72,10 @@ $CLIENT_RELEASE_TYPE = "beta"
 #=====================================================================//
 
 # File name of the latest https://github.com/ModdingX/ModListCreator/releases
-$CHANGELOG_GENERATOR_JAR = "ModListCreator-4.0.2-fatjar.jar"
+$CHANGELOG_GENERATOR_JAR = "ModListCreator-4.0.3-fatjar.jar"
 
 # File name of the latest https://github.com/ModdingX/ModListCreator/releases
-$MODLIST_CREATOR_JAR = "ModListCreator-4.0.2-fatjar.jar"
+$MODLIST_CREATOR_JAR = "ModListCreator-4.0.3-fatjar.jar"
 
 #=====================================================================//
 #  CLIENT FILE SETTINGS
