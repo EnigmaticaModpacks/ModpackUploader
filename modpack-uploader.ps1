@@ -364,11 +364,8 @@ function New-GitHubRelease {
     
         $Body = @{
             tag_name         = $MODPACK_VERSION
-            target_commitish = 'master'
             name             = $MODPACK_VERSION
-            body             = ''
-            draft            = $false
-            prerelease       = $false
+			generate_release_notes = $true
         } | ConvertTo-Json
 
     
