@@ -115,7 +115,7 @@ function New-ClientFiles {
             Write-Host "Adding " -ForegroundColor Cyan -NoNewline
             Write-Host $_ -ForegroundColor Blue -NoNewline
             Write-Host " to the mods folder in the client files." -ForegroundColor Cyan
-            Copy-Item -Path $_ -Destination "$overridesFolder/mods/$_" -Recurse
+            Copy-Item -Path $_ -Destination "$overridesFolder/$_" -Recurse
         }
 
         Remove-BlacklistedFiles
