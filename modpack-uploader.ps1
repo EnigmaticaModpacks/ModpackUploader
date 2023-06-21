@@ -107,6 +107,17 @@ function New-ClientFiles {
             Copy-Item -Path $_ -Destination "$overridesFolder/$_" -Recurse
         }
 
+        $destinationFolder = "$overridesFolder/mods"
+        if (!(Test-Path -Path $destinationFolder)) {
+            New-Item $destinationFolder -Type Directory
+        }
+        $FILES_TO_INCLUDE_IN_MODS_FOLDER_IN_CLIENT_FILES | ForEach-Object {
+            Write-Host "Adding " -ForegroundColor Cyan -NoNewline
+            Write-Host $_ -ForegroundColor Blue -NoNewline
+            Write-Host " to the mods folder in the client files." -ForegroundColor Cyan
+            Copy-Item -Path $_ -Destination "$overridesFolder/mods/$_" -Recurse
+        }
+
         Remove-BlacklistedFiles
 
         # Zipping up the newly created overrides folder and $manifest
@@ -363,9 +374,9 @@ function New-GitHubRelease {
         };
     
         $Body = @{
-            tag_name         = $MODPACK_VERSION
-            name             = $MODPACK_VERSION
-			generate_release_notes = $true
+            tag_name               = $MODPACK_VERSION
+            name                   = $MODPACK_VERSION
+            generate_release_notes = $true
         } | ConvertTo-Json
 
     
